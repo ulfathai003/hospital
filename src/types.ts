@@ -1,7 +1,7 @@
 
 export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'DOCTOR' | 'RECEPTIONIST' | 'NURSE' | 'PHARMACIST' | 'LAB_TECHNICIAN' | 'CRM_EXECUTIVE' | 'BILLING_EXECUTIVE';
 
-export type PatientStatus = 'ACTIVE' | 'INACTIVE' | 'DISCHARGED';
+export type PatientStatus = 'Active' | 'InActive' | 'Hold';
 export type AppointmentStatus = 'SCHEDULED' | 'CHECKED_IN' | 'IN_CONSULTATION' | 'COMPLETED' | 'CANCELLED';
 export type QueueStatus = 'PENDING' | 'ACTIVE' | 'DONE';
 export type LeadStage = 'NEW' | 'CONTACTED' | 'COUNSELLING' | 'QUALIFIED' | 'CONVERTED' | 'LOST' | 'ADMITTED';
@@ -18,28 +18,24 @@ export interface User {
 
 export interface Patient {
   id: string;
-  uhid: string;
+  uhid: string; // YYYY-NNNNNN
   status: PatientStatus;
-  registrationType: string;
+  registrationType: 'Regular' | 'Temporary' | 'Unknown';
   fullName: string;
-  gender: string;
-  dob: string;
+  gender: 'Male' | 'Female' | 'Other';
+  dobCalendar: 'Gregorian' | 'Hijri';
+  dob: string; // DD-MMM-YYYY
   nationality: string;
-  mobile: string;
-  email: string;
+  mobileNo: string;
+  emailId?: string;
   religion?: string;
-  idType?: string;
-  idNumber?: string;
-  bloodGroup?: string;
-  district?: string;
+  idType?: 'Aadhar' | 'Passport' | 'PAN Card' | 'Driving License';
+  idNo?: string;
+  bloodGroup?: 'AB Positive' | 'AB Negative' | 'A Positive' | 'A Negative' | 'B Positive' | 'B Negative' | 'O Positive' | 'O Negative';
+  district: string;
   state: string;
   country: string;
-  address: string;
-  allergySummary?: string;
-  chronicIllness?: string;
-  emergencyContactName?: string;
-  emergencyContactRelation?: string;
-  emergencyContactMobile?: string;
+  address?: string;
   createdAt: string;
   updatedAt: string;
 }

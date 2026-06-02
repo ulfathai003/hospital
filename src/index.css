@@ -2,15 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-nm-bg: #e0e5ec;
-  --color-nm-shadow-light: #ffffff;
-  --color-nm-shadow-dark: #a3b1c6;
+  --color-nm-bg: #dad7cd;
+  --color-nm-shadow-light: #f1f0ec;
+  --color-nm-shadow-dark: #b8bca9;
+  --color-nm-accent: #588157;
+  --color-nm-accent-light: #a3b18a;
 }
 
 body {
   background-color: var(--color-nm-bg);
-  color: #4a5568;
-  font-family: 'Outfit', sans-serif;
+  color: #434c5e;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   overflow-x: hidden;
 }
@@ -37,7 +39,15 @@ body {
     transition: all 0.2s ease;
   }
 
-  .nm-button:active {
+  .nm-button-accent {
+    background: var(--color-nm-accent-light);
+    color: white;
+    box-shadow: 4px 4px 8px rgba(88, 129, 87, 0.4),
+                -4px -4px 8px rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .nm-button:active, .nm-button-accent:active {
     box-shadow: inset 2px 2px 5px var(--color-nm-shadow-dark),
                 inset -2px -2px 5px var(--color-nm-shadow-light);
     transform: scale(0.98);

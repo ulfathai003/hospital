@@ -16,11 +16,27 @@ interface UserSession {
 }
 
 interface Patient {
-  id: string; uhid: string; fullName: string; gender: string; dob: string;
-  mobile: string; email: string; bloodGroup: string; address: string;
-  district: string; state: string; country: string; emergencyContactName: string;
-  emergencyContactMobile: string; allergySummary: string; chronicIllness: string;
-  registrationType: string; status: string; createdAt: string;
+  id: string;
+  uhid: string; // YYYY-NNNNNN
+  status: 'Active' | 'InActive' | 'Hold';
+  registrationType: 'Regular' | 'Temporary' | 'Unknown';
+  fullName: string;
+  gender: 'Male' | 'Female' | 'Other';
+  dobCalendar: 'Gregorian' | 'Hijri';
+  dob: string; // DD-MMM-YYYY
+  nationality: string;
+  mobileNo: string;
+  emailId?: string;
+  religion?: string;
+  idType?: 'Aadhar' | 'Passport' | 'PAN Card' | 'Driving License';
+  idNo?: string;
+  bloodGroup?: 'AB Positive' | 'AB Negative' | 'A Positive' | 'A Negative' | 'B Positive' | 'B Negative' | 'O Positive' | 'O Negative';
+  district: string;
+  state: string;
+  country: string;
+  address?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ─── SEED DATA ──────────────────────────────────────────────────────────────────
@@ -35,25 +51,18 @@ const DEMO_ACCOUNTS: Array<UserSession & { password: string }> = [
 
 const INITIAL_PATIENTS: Patient[] = [
   {
-    id: 'pat-1', uhid: 'UHID-2026-0001', fullName: 'Rahul Sen', gender: 'Male', dob: '1990-05-15',
-    mobile: '9876543210', email: 'rahul.sen@example.com', bloodGroup: 'O+', address: '123 Park Street, Mumbai',
-    district: 'Mumbai', state: 'Maharashtra', country: 'India', emergencyContactName: 'Priya Sen',
-    emergencyContactMobile: '9876543211', allergySummary: 'None', chronicIllness: 'None',
-    registrationType: 'WALK_IN', status: 'ACTIVE', createdAt: '2026-05-20T10:00:00Z'
-  },
-  {
-    id: 'pat-2', uhid: 'UHID-2026-0002', fullName: 'Harpreet Kaur', gender: 'Female', dob: '1985-11-22',
-    mobile: '9988776655', email: 'harpreet.k@example.com', bloodGroup: 'B+', address: '45 MG Road, Delhi',
-    district: 'New Delhi', state: 'Delhi', country: 'India', emergencyContactName: 'Gurdeep Kaur',
-    emergencyContactMobile: '9988776644', allergySummary: 'Penicillin', chronicIllness: 'Hypertension',
-    registrationType: 'REFERRED', status: 'ACTIVE', createdAt: '2026-05-25T10:00:00Z'
+    id: 'pat-1', uhid: '2026-000001', fullName: 'Rahul Sen', gender: 'Male', dobCalendar: 'Gregorian', dob: '15-May-1990',
+    mobileNo: '9876543210', emailId: 'rahul.sen@example.com', bloodGroup: 'O Positive', address: '123 Park Street',
+    district: 'Mumbai', state: 'Maharashtra', country: 'India', registrationType: 'Regular', status: 'Active',
+    nationality: 'Indian', religion: 'Hinduism',
+    createdAt: '2026-05-20T10:00:00Z', updatedAt: '2026-05-20T10:00:00Z'
   },
 ];
 
 // ─── NM BUTTON COMPONENT ────────────────────────────────────────────────────────
-const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disabled = false }: any) => (
+const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disabled = false, accent = false }: any) => (
   <button type={type} onClick={onClick} disabled={disabled}
-    className={`nm-button px-4 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
+    className={`${accent ? 'nm-button-accent' : 'nm-button'} px-4 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
     {children}
   </button>
 );
@@ -70,31 +79,53 @@ const Toast = ({ msg, type, onClose }: { msg: string; type: 'success' | 'error';
 );
 
 // ─── PATIENT REGISTRATION MODAL ────────────────────────────────────────────────
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-const REG_TYPES    = ['WALK_IN', 'REFERRED', 'EMERGENCY', 'ONLINE'];
-const STATES_LIST  = ['Andhra Pradesh','Delhi','Gujarat','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Punjab','Rajasthan','Tamil Nadu','Telangana','Uttar Pradesh','West Bengal'];
+const BLOOD_GROUPS = ['A Positive', 'A Negative', 'B Positive', 'B Negative', 'AB Positive', 'AB Negative', 'O Positive', 'O Negative'];
+const REG_TYPES    = ['Regular', 'Temporary', 'Unknown'];
+const NATIONALITIES = ['Indian', 'American', 'British', 'Canadian', 'Australian', 'Emirati', 'Saudi'];
+const RELIGIONS = ['Hinduism', 'Islam', 'Christianity', 'Sikhism', 'Buddhism', 'Jainism', 'Other'];
+const ID_TYPES = ['Aadhar', 'Passport', 'PAN Card', 'Driving License'];
+const DISTRICT_DATA: Record<string, { state: string; country: string }> = {
+  'Mumbai': { state: 'Maharashtra', country: 'India' },
+  'Pune': { state: 'Maharashtra', country: 'India' },
+  'New Delhi': { state: 'Delhi', country: 'India' },
+  'Bangalore': { state: 'Karnataka', country: 'India' },
+  'Chennai': { state: 'Tamil Nadu', country: 'India' },
+  'Hyderabad': { state: 'Telangana', country: 'India' },
+};
 
 interface RegModalProps {
   onClose: () => void;
   onSave: (p: Patient) => void;
 }
 const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
-  const empty = { fullName:'', gender:'Male', dob:'', mobile:'', email:'',
-    bloodGroup:'O+', address:'', district:'', state:'Maharashtra', country:'India',
-    emergencyContactName:'', emergencyContactMobile:'', allergySummary:'None',
-    chronicIllness:'None', registrationType:'WALK_IN' };
+  const empty = { 
+    fullName:'', gender:'Male', dobCalendar:'Gregorian', dob:'', mobileNo:'', emailId:'',
+    bloodGroup:'O Positive', nationality:'Indian', religion:'Hinduism', idType:'', idNo:'',
+    address:'', district:'Mumbai', state:'Maharashtra', country:'India', registrationType:'Regular' 
+  };
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<Record<string,string>>({});
 
-  const set = (k: string, v: string) => { setForm(f => ({...f,[k]:v})); setErrors(e => ({...e,[k]:''})); };
+  const set = (k: string, v: string) => { 
+    setForm(f => {
+      const updated = { ...f, [k]: v };
+      if (k === 'district' && DISTRICT_DATA[v]) {
+        updated.state = DISTRICT_DATA[v].state;
+        updated.country = DISTRICT_DATA[v].country;
+      }
+      return updated;
+    }); 
+    setErrors(e => ({...e,[k]:''})); 
+  };
 
   const validate = () => {
     const e: Record<string,string> = {};
-    if (!form.fullName.trim())   e.fullName = 'Name is required';
-    if (!form.dob)               e.dob      = 'Date of birth is required';
-    if (!form.mobile.match(/^\d{10}$/)) e.mobile = 'Enter valid 10-digit mobile';
-    if (!form.address.trim())    e.address  = 'Address is required';
-    if (new Date(form.dob) > new Date()) e.dob = 'DOB cannot be in the future';
+    if (form.fullName.length < 3 || form.fullName.length > 60) e.fullName = 'Name must be 3-60 characters';
+    if (!form.dob) e.dob = 'Date of birth is required';
+    if (!form.mobileNo.match(/^\d{10}$/)) e.mobileNo = 'Enter valid 10-digit numeric mobile no';
+    if (form.idType && (!form.idNo || form.idNo.length < 3 || form.idNo.length > 15)) e.idNo = 'ID No must be 3-15 characters';
+    if (form.address && form.address.length > 100) e.address = 'Address max 100 characters';
+    
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -102,34 +133,42 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
   const handleSave = () => {
     if (!validate()) return;
     const now = new Date().toISOString();
-    const seq = String(Math.floor(Math.random() * 9000) + 1000);
+    const year = new Date().getFullYear();
+    const seq = String(Math.floor(Math.random() * 900000) + 100000);
+    
     const p: Patient = {
       id: `pat-${Date.now()}`,
-      uhid: `UHID-${new Date().getFullYear()}-${seq}`,
-      status: 'ACTIVE', createdAt: now, ...form
+      uhid: `${year}-${seq}`,
+      status: 'Active',
+      updatedAt: now,
+      createdAt: now,
+      ...form as any
     };
     onSave(p);
   };
 
-  const F = ({ label, field, type='text', required=false, half=false }: any) => (
+  const F = ({ label, field, type='text', required=false, half=false, disabled=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
       <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
         {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
-      <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-red-400' : ''}`}>
+      <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-red-400' : ''} ${disabled ? 'opacity-50' : ''}`}>
         <input type={type} value={(form as any)[field]} onChange={e => set(field, e.target.value)}
-          placeholder={label} className="bg-transparent w-full outline-none text-sm font-medium" />
+          disabled={disabled} placeholder={label} className="bg-transparent w-full outline-none text-sm font-medium" />
       </div>
       {errors[field] && <p className="text-red-500 text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
     </div>
   );
 
-  const S = ({ label, field, options, half=false }: any) => (
+  const S = ({ label, field, options, half=false, required=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
-      <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">{label}</label>
+      <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
+        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+      </label>
       <div className="nm-inset px-3 py-2 rounded-xl mt-0.5 relative">
         <select value={(form as any)[field]} onChange={e => set(field, e.target.value)}
           className="bg-transparent w-full outline-none text-sm font-medium appearance-none cursor-pointer">
+          <option value="">Select {label}</option>
           {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
         </select>
         <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none" />
@@ -140,66 +179,62 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-        className="nm-card w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden">
+        className="nm-card w-full max-w-3xl max-h-[95vh] flex flex-col rounded-2xl overflow-hidden">
 
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
           <div className="flex items-center gap-3">
             <div className="nm-inset p-2 rounded-xl text-blue-600"><Users size={20} /></div>
             <div>
-              <h2 className="font-black text-gray-800">New Patient Registration</h2>
-              <p className="text-[10px] opacity-60 font-medium">All fields marked * are mandatory. UHID auto-generated.</p>
+              <h2 className="font-black text-gray-800">Advanced Patient Registration</h2>
+              <p className="text-[10px] opacity-60 font-medium uppercase tracking-tighter">Following Specification Sheet SL-01 to 18</p>
             </div>
           </div>
           <button onClick={onClose} className="nm-button p-2 rounded-xl"><X size={18} /></button>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="grid grid-cols-2 gap-3">
-
-            {/* Section: Personal Info */}
-            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl">
-              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Personal Information</span>
+        <div className="flex-1 overflow-y-auto p-5">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+            
+            {/* System Controlled Info */}
+            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl bg-[#a3b18a]/20">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#588157]">Personal Information</span>
             </div>
+
+            <S label="Registration Type" field="registrationType" options={REG_TYPES} required half />
             <F label="Full Name" field="fullName" required half />
-            <S label="Gender" field="gender" options={['Male', 'Female', 'Other']} half />
-            <F label="Date of Birth" field="dob" type="date" required half />
-            <S label="Registration Type" field="registrationType" options={REG_TYPES} half />
+            
+            <S label="Gender" field="gender" options={['Male', 'Female', 'Other']} required half />
+            <S label="DOB Calendar" field="dobCalendar" options={['Gregorian', 'Hijri']} required half />
+            
+            <F label="Date of Birth (DOB)" field="dob" type="date" required half />
+            <S label="Nationality" field="nationality" options={NATIONALITIES} required half />
 
-            {/* Section: Contact */}
-            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl">
-              <span className="text-[10px] font-black uppercase tracking-widest text-purple-600">Contact Details</span>
-            </div>
-            <F label="Mobile Number" field="mobile" required half />
-            <F label="Email Address" field="email" type="email" half />
-            <F label="Address" field="address" required />
-            <F label="District / City" field="district" half />
-            <S label="State" field="state" options={STATES_LIST} half />
-            <F label="Country" field="country" half />
+            <F label="Mobile No" field="mobileNo" required half />
+            <F label="Email ID" field="emailId" type="email" half />
+
+            <S label="Religion" field="religion" options={RELIGIONS} half />
             <S label="Blood Group" field="bloodGroup" options={BLOOD_GROUPS} half />
 
-            {/* Section: Emergency */}
-            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">Emergency Contact</span>
-            </div>
-            <F label="Emergency Contact Name" field="emergencyContactName" half />
-            <F label="Emergency Contact Mobile" field="emergencyContactMobile" half />
+            <div className="col-span-2 h-px bg-gray-200 my-1"></div>
 
-            {/* Section: Medical */}
-            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl">
-              <span className="text-[10px] font-black uppercase tracking-widest text-green-600">Medical History</span>
-            </div>
-            <F label="Known Allergies" field="allergySummary" half />
-            <F label="Chronic Illness" field="chronicIllness" half />
+            <S label="ID Type" field="idType" options={ID_TYPES} half />
+            <F label="ID No" field="idNo" half disabled={!form.idType} />
+
+            <S label="District" field="district" options={Object.keys(DISTRICT_DATA)} required half />
+            <F label="State" field="state" half disabled />
+
+            <F label="Country" field="country" half disabled />
+            <div className="col-span-1"></div>
+
+            <F label="Address" field="address" />
+
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-end gap-3 p-4 border-t border-gray-200 shrink-0">
-          <NmBtn onClick={onClose} className="text-gray-600">Cancel</NmBtn>
-          <NmBtn onClick={handleSave} className="text-green-700 flex items-center gap-2">
-            <Save size={16} /> Register Patient
+        <div className="flex justify-end gap-3 p-4 border-t border-gray-200 shrink-0 bg-gray-50/50">
+          <NmBtn onClick={onClose} className="text-gray-600">Discard Changes</NmBtn>
+          <NmBtn onClick={handleSave} accent className="flex items-center gap-2 px-8">
+            <Save size={16} /> Save & Generate UHID
           </NmBtn>
         </div>
       </motion.div>
@@ -221,11 +256,11 @@ const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: (
       </div>
       <div className="p-4 grid grid-cols-2 gap-2">
         {[
-          ['Gender', patient.gender], ['DOB', patient.dob], ['Mobile', patient.mobile],
-          ['Email', patient.email], ['Blood Group', patient.bloodGroup], ['Status', patient.status],
-          ['State', patient.state], ['Country', patient.country], ['Allergies', patient.allergySummary],
-          ['Chronic Illness', patient.chronicIllness], ['Emergency Contact', patient.emergencyContactName],
-          ['Emergency Mobile', patient.emergencyContactMobile],
+          ['Gender', patient.gender], ['DOB', patient.dob], ['Calendar', patient.dobCalendar], ['Mobile', patient.mobileNo],
+          ['Email', patient.emailId], ['Blood Group', patient.bloodGroup], ['Status', patient.status],
+          ['State', patient.state], ['Country', patient.country], ['District', patient.district],
+          ['Nationality', patient.nationality], ['Religion', patient.religion],
+          ['ID Type', patient.idType], ['ID No', patient.idNo],
         ].map(([k, v]) => (
           <div key={k} className="nm-inset p-2 rounded-xl">
             <p className="text-[9px] font-black uppercase opacity-50">{k}</p>
@@ -234,7 +269,7 @@ const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: (
         ))}
         <div className="col-span-2 nm-inset p-2 rounded-xl">
           <p className="text-[9px] font-black uppercase opacity-50">Address</p>
-          <p className="text-sm font-bold">{patient.address}, {patient.district}</p>
+          <p className="text-sm font-bold">{patient.address}</p>
         </div>
       </div>
     </motion.div>
@@ -251,7 +286,7 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
   const filtered = patients.filter((p: Patient) =>
     p.fullName.toLowerCase().includes(search.toLowerCase()) ||
     p.uhid.toLowerCase().includes(search.toLowerCase()) ||
-    p.mobile.includes(search)
+    p.mobileNo.includes(search)
   );
 
   const handleSave = (p: Patient) => {
@@ -264,11 +299,11 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-          <Users size={20} className="text-blue-500" /> Patient Registry
-          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-blue-600">{patients.length}</span>
+          <Users size={20} className="text-[#588157]" /> Patient Registry
+          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[#588157]">{patients.length}</span>
         </h2>
         {canRegister && (
-          <NmBtn onClick={() => setShowReg(true)} className="text-blue-700 flex items-center gap-2">
+          <NmBtn onClick={() => setShowReg(true)} accent className="flex items-center gap-2">
             <Plus size={16} /> New Registration
           </NmBtn>
         )}
@@ -299,17 +334,17 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
             {filtered.length === 0 ? (
               <tr><td colSpan={7} className="py-8 text-center opacity-40 font-bold">No patients found</td></tr>
             ) : filtered.map((p: Patient) => (
-              <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
-                <td className="py-2 pr-3 font-bold text-blue-600">{p.uhid}</td>
+              <tr key={p.id} className="hover:bg-[#a3b18a]/10 transition-colors">
+                <td className="py-2 pr-3 font-bold text-[#588157]">{p.uhid}</td>
                 <td className="py-2 pr-3 font-black">{p.fullName}</td>
                 <td className="py-2 pr-3 font-medium">{p.gender}</td>
-                <td className="py-2 pr-3 font-medium">{p.mobile}</td>
+                <td className="py-2 pr-3 font-medium">{p.mobileNo}</td>
                 <td className="py-2 pr-3">
                   <span className="nm-inset px-2 py-0.5 rounded-full font-bold text-[10px]">{p.bloodGroup}</span>
                 </td>
                 <td className="py-2 pr-3">
                   <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                    p.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    p.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                   }`}>{p.status}</span>
                 </td>
                 <td className="py-2">
@@ -340,10 +375,10 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
       </h2>
       <div className="grid grid-cols-2 gap-3 flex-1">
         {[
-          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-blue-600' },
-          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-green-600' },
-          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-purple-600' },
-          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-amber-600' },
+          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-[#588157]' },
+          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-[#588157]' },
+          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-[#588157]' },
+          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-[#588157]' },
         ].map((k, i) => (
           <div key={i} className="nm-inset p-4 rounded-xl flex flex-col gap-1">
             <k.icon size={20} className={k.color} />
@@ -447,10 +482,10 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
-          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-blue-500' },
-          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-green-500'},
-          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-purple-500'},
-          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-amber-500'},
+          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-[#588157]' },
+          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-[#588157]'},
+          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-[#588157]'},
+          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-[#588157]'},
         ].map((kpi, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <div className="flex items-center justify-between mb-1">
@@ -560,12 +595,12 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
   const tab = ROLE_TABS.find(r => r.key === roleTab)!;
 
   return (
-    <div className="h-screen flex items-center justify-center p-4 bg-[#e0e5ec]">
+    <div className="h-screen flex items-center justify-center p-4 bg-[var(--color-nm-bg)]">
       <div className="nm-card w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-5">
           <div className="inline-flex nm-inset p-4 rounded-full mb-3">
-            <Hospital size={44} className="text-blue-600" />
+            <Hospital size={44} className="text-[#588157]" />
           </div>
           <h1 className="text-3xl font-black text-gray-800 tracking-tighter">MediCore</h1>
           <p className="text-[11px] font-bold uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
@@ -576,7 +611,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           {ROLE_TABS.map(r => (
             <button key={r.key} onClick={() => handleTabChange(r.key)}
               className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all text-center ${
-                roleTab === r.key ? `nm-flat ${r.color} font-black` : 'opacity-50 font-bold hover:opacity-75'
+                roleTab === r.key ? `nm-flat text-[#588157] font-black` : 'opacity-50 font-bold hover:opacity-75'
               }`}>
               <r.icon size={18} />
               <span className="text-[9px] uppercase font-black leading-none">{r.label}</span>
@@ -612,7 +647,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
             </div>
           )}
           <button onClick={handleLogin} disabled={loading}
-            className={`nm-button w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black cursor-pointer ${tab.color} disabled:opacity-40`}>
+            className={`nm-button-accent w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black cursor-pointer disabled:opacity-40`}>
             {loading ? <span className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" /> :
               <><tab.icon size={20} /> Login as {tab.label}</>}
           </button>
@@ -681,8 +716,8 @@ const NAV_BY_ROLE: Record<string, Array<{ id: string; icon: any; label: string }
 };
 
 const ROLE_BADGE_COLORS: Record<string,string> = {
-  SUPER_ADMIN:'text-blue-600', DOCTOR:'text-green-600', LAB_TECHNICIAN:'text-purple-600',
-  PATIENT:'text-amber-600', RECEPTIONIST:'text-teal-600', PHARMACIST:'text-orange-600',
+  SUPER_ADMIN:'text-[#588157]', DOCTOR:'text-[#588157]', LAB_TECHNICIAN:'text-[#588157]',
+  PATIENT:'text-[#588157]', RECEPTIONIST:'text-[#588157]', PHARMACIST:'text-[#588157]',
 };
 
 // ─── MAIN APP ──────────────────────────────────────────────────────────────────
@@ -709,11 +744,11 @@ export default function App() {
   const handleLogout = () => { setUser(null); setActiveTab('dashboard'); };
 
   if (loading) return (
-    <div className="h-screen flex flex-col items-center justify-center gap-4 bg-[#e0e5ec]">
+    <div className="h-screen flex flex-col items-center justify-center gap-4 bg-[var(--color-nm-bg)]">
       <div className="nm-flat p-8 rounded-full">
-        <Hospital size={48} className="text-blue-600 animate-pulse" />
+        <Hospital size={48} className="text-[#588157] animate-pulse" />
       </div>
-      <p className="font-black text-lg text-blue-800 tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
+      <p className="font-black text-lg text-[#588157] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
     </div>
   );
 
@@ -742,7 +777,7 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen flex p-2 gap-2 overflow-hidden bg-[#e0e5ec]">
+    <div className="h-screen flex p-2 gap-2 overflow-hidden bg-[var(--color-nm-bg)]">
       {/* ── SIDEBAR ── */}
       <nav className="nm-flat w-[66px] lg:w-[175px] rounded-2xl flex flex-col p-2 shrink-0 transition-all">
         <div className="flex items-center gap-2 px-2 py-3 mb-3">
