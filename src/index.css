@@ -1,0 +1,78 @@
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', sans-serif;
+  --color-nm-bg: #e0e5ec;
+  --color-nm-shadow-light: #ffffff;
+  --color-nm-shadow-dark: #a3b1c6;
+}
+
+:root {
+  background-color: var(--color-nm-bg);
+  color: #4a5568;
+  font-family: var(--font-sans);
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Neumorphic Utilities */
+@layer components {
+  .nm-flat {
+    background: var(--color-nm-bg);
+    box-shadow: 6px 6px 12px var(--color-nm-shadow-dark),
+                -6px -6px 12px var(--color-nm-shadow-light);
+  }
+
+  .nm-inset {
+    background: var(--color-nm-bg);
+    box-shadow: inset 4px 4px 8px var(--color-nm-shadow-dark),
+                inset -4px -4px 8px var(--color-nm-shadow-light);
+  }
+
+  .nm-button {
+    background: var(--color-nm-bg);
+    box-shadow: 4px 4px 8px var(--color-nm-shadow-dark),
+                -4px -4px 8px var(--color-nm-shadow-light);
+    transition: all 0.2s ease;
+  }
+
+  .nm-button:active {
+    box-shadow: inset 2px 2px 5px var(--color-nm-shadow-dark),
+                inset -2px -2px 5px var(--color-nm-shadow-light);
+    transform: scale(0.98);
+  }
+
+  .nm-card {
+    border-radius: 12px;
+    padding: 1rem;
+    background: var(--color-nm-bg);
+    box-shadow: 8px 8px 16px var(--color-nm-shadow-dark),
+                -8px -8px 16px var(--color-nm-shadow-light);
+  }
+
+  /* Compact spacing rules */
+  .dense-grid {
+    display: grid;
+    gap: 4px;
+  }
+
+  .dense-flex {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
