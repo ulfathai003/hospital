@@ -1,23 +1,20 @@
 
 @import "tailwindcss";
 
-@theme {
-  --font-sans: 'Outfit', sans-serif;
+:root {
   --color-nm-bg: #e0e5ec;
   --color-nm-shadow-light: #ffffff;
   --color-nm-shadow-dark: #a3b1c6;
 }
 
-:root {
+body {
   background-color: var(--color-nm-bg);
   color: #4a5568;
-  font-family: var(--font-sans);
-}
-
-body {
+  font-family: 'Outfit', sans-serif;
   margin: 0;
   overflow-x: hidden;
 }
+
 
 /* Neumorphic Utilities */
 @layer components {

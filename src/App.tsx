@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   Calendar, 
-  ClipboardList, 
   Stethoscope, 
   LayoutDashboard, 
   CreditCard, 
@@ -18,7 +17,7 @@ import {
   LogOut,
   Hospital
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 // --- Mock Components for Modules ---
 const Dashboard = () => (
