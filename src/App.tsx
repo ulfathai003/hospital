@@ -62,7 +62,7 @@ const INITIAL_PATIENTS: Patient[] = [
 // ─── NM BUTTON COMPONENT ────────────────────────────────────────────────────────
 const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disabled = false, accent = false }: any) => (
   <button type={type} onClick={onClick} disabled={disabled}
-    className={`${accent ? 'nm-button-accent' : 'nm-button'} px-4 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
+    className={`${accent ? 'nm-button-accent' : 'nm-button'} px-4 py-2.5 rounded-xl font-normal text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
     {children}
   </button>
 );
@@ -71,7 +71,7 @@ const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disa
 const Toast = ({ msg, type, onClose }: { msg: string; type: 'success' | 'error'; onClose: () => void }) => (
   <motion.div initial={{ opacity: 0, y: -40, x: '50%', right: '50%' }}
     animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }}
-    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-bold shadow-2xl ${type === 'success' ? 'text-black' : 'text-black'}`}>
+    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-normal shadow-2xl ${type === 'success' ? 'text-black' : 'text-black'}`}>
     {type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
     <span>{msg}</span>
     <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100"><X size={16} /></button>
@@ -149,12 +149,12 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
 
   const F = ({ label, field, type='text', required=false, half=false, disabled=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
-      <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
+      <label className="text-[10px] font-normal uppercase tracking-widest opacity-60 ml-1">
         {label}{required && <span className="text-black ml-0.5">*</span>}
       </label>
       <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-gray-400' : ''} ${disabled ? 'opacity-50' : ''}`}>
         <input type={type} value={(form as any)[field]} onChange={e => set(field, e.target.value)}
-          disabled={disabled} placeholder={label} className="bg-transparent w-full outline-none text-sm font-medium" />
+          disabled={disabled} placeholder={label} className="bg-transparent w-full outline-none text-sm font-normal" />
       </div>
       {errors[field] && <p className="text-black text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
     </div>
@@ -162,12 +162,12 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
 
   const S = ({ label, field, options, half=false, required=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
-      <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
+      <label className="text-[10px] font-normal uppercase tracking-widest opacity-60 ml-1">
         {label}{required && <span className="text-black ml-0.5">*</span>}
       </label>
       <div className="nm-inset px-3 py-2 rounded-xl mt-0.5 relative">
         <select value={(form as any)[field]} onChange={e => set(field, e.target.value)}
-          className="bg-transparent w-full outline-none text-sm font-medium appearance-none cursor-pointer">
+          className="bg-transparent w-full outline-none text-sm font-normal appearance-none cursor-pointer">
           <option value="">Select {label}</option>
           {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
         </select>
@@ -185,8 +185,8 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
           <div className="flex items-center gap-3">
             <div className="nm-inset p-2 rounded-xl text-black/80"><Users size={20} /></div>
             <div>
-              <h2 className="font-black text-black">Advanced Patient Registration</h2>
-              <p className="text-[10px] opacity-60 font-medium uppercase tracking-tighter">Following Specification Sheet SL-01 to 18</p>
+              <h2 className="font-normal text-black">Advanced Patient Registration</h2>
+              <p className="text-[10px] opacity-60 font-normal uppercase tracking-tighter">Following Specification Sheet SL-01 to 18</p>
             </div>
           </div>
           <button onClick={onClose} className="nm-button p-2 rounded-xl"><X size={18} /></button>
@@ -197,7 +197,7 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
             
             {/* System Controlled Info */}
             <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl bg-[var(--color-nm-accent-light)]/10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#4361ee]">Personal Information</span>
+              <span className="text-[10px] font-normal uppercase tracking-widest text-[#4361ee]">Personal Information</span>
             </div>
 
             <S label="Registration Type" field="registrationType" options={REG_TYPES} required half />
@@ -249,8 +249,8 @@ const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: (
       className="nm-card w-full max-w-xl rounded-2xl overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-black/20">
         <div>
-          <h2 className="font-black text-black">{patient.fullName}</h2>
-          <p className="text-[11px] font-bold text-black/80">{patient.uhid}</p>
+          <h2 className="font-normal text-black">{patient.fullName}</h2>
+          <p className="text-[11px] font-normal text-black/80">{patient.uhid}</p>
         </div>
         <button onClick={onClose} className="nm-button p-2 rounded-xl"><X size={18} /></button>
       </div>
@@ -263,13 +263,13 @@ const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: (
           ['ID Type', patient.idType], ['ID No', patient.idNo],
         ].map(([k, v]) => (
           <div key={k} className="nm-inset p-2 rounded-xl">
-            <p className="text-[9px] font-black uppercase opacity-50">{k}</p>
-            <p className="text-sm font-bold">{v || '—'}</p>
+            <p className="text-[9px] font-normal uppercase opacity-50">{k}</p>
+            <p className="text-sm font-normal">{v || '—'}</p>
           </div>
         ))}
         <div className="col-span-2 nm-inset p-2 rounded-xl">
-          <p className="text-[9px] font-black uppercase opacity-50">Address</p>
-          <p className="text-sm font-bold">{patient.address}</p>
+          <p className="text-[9px] font-normal uppercase opacity-50">Address</p>
+          <p className="text-sm font-normal">{patient.address}</p>
         </div>
       </div>
     </motion.div>
@@ -298,13 +298,13 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
   return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-black flex items-center gap-2 text-black">
+        <h2 className="text-lg font-normal flex items-center gap-2 text-black">
           <Users size={20} className="text-[#4361ee]" /> Patient Registry
           <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[#4361ee]">{patients.length}</span>
         </h2>
         {canRegister && (
-          <NmBtn onClick={() => setShowReg(true)} accent className="flex items-center gap-2">
-            <Plus size={16} /> New Registration
+          <NmBtn onClick={() => setShowReg(true)} accent className="flex items-center gap-2 text-[12px] py-1.5">
+            <Plus size={14} /> New Registration
           </NmBtn>
         )}
       </div>
@@ -313,14 +313,14 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
         <Search size={16} className="opacity-50 shrink-0" />
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by Name, UHID or Mobile Number..."
-          className="bg-transparent outline-none text-sm w-full font-medium" />
+          className="bg-transparent outline-none text-sm w-full font-normal" />
         {search && <button onClick={() => setSearch('')}><X size={14} className="opacity-50" /></button>}
       </div>
 
       <div className="flex-1 overflow-auto">
         <table className="w-full text-xs">
           <thead className="sticky top-0 z-10" style={{ background: 'var(--color-nm-bg)' }}>
-            <tr className="text-left border-b border-black/20 opacity-60 uppercase font-black tracking-widest text-[9px]">
+            <tr className="text-left border-b border-black/20 opacity-60 uppercase font-normal tracking-widest text-[9px]">
               <th className="pb-2 pr-3">UHID</th>
               <th className="pb-2 pr-3">Patient Name</th>
               <th className="pb-2 pr-3">Gender</th>
@@ -332,23 +332,23 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
           </thead>
           <tbody className="divide-y divide-black/10">
             {filtered.length === 0 ? (
-              <tr><td colSpan={7} className="py-8 text-center opacity-40 font-bold">No patients found</td></tr>
+              <tr><td colSpan={7} className="py-8 text-center opacity-40 font-normal">No patients found</td></tr>
             ) : filtered.map((p: Patient) => (
               <tr key={p.id} className="hover:bg-[#8338ec]/5 transition-colors">
-                <td className="py-2 pr-3 font-bold text-[#4361ee]">{p.uhid}</td>
-                <td className="py-2 pr-3 font-black">{p.fullName}</td>
-                <td className="py-2 pr-3 font-medium">{p.gender}</td>
-                <td className="py-2 pr-3 font-medium">{p.mobileNo}</td>
+                <td className="py-2 pr-3 font-normal text-[#4361ee]">{p.uhid}</td>
+                <td className="py-2 pr-3 font-normal">{p.fullName}</td>
+                <td className="py-2 pr-3 font-normal">{p.gender}</td>
+                <td className="py-2 pr-3 font-normal">{p.mobileNo}</td>
                 <td className="py-2 pr-3">
-                  <span className="nm-inset px-2 py-0.5 rounded-full font-bold text-[10px]">{p.bloodGroup}</span>
+                  <span className="nm-inset px-2 py-0.5 rounded-full font-normal text-[10px]">{p.bloodGroup}</span>
                 </td>
                 <td className="py-2 pr-3">
-                  <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                    p.status === 'Active' ? 'bg-white font-bold' : 'bg-white text-black/40'
+                  <span className={`px-2 py-0.5 rounded-full font-normal text-[10px] ${
+                    p.status === 'Active' ? 'bg-white font-normal' : 'bg-white text-black/40'
                   }`}>{p.status}</span>
                 </td>
                 <td className="py-2">
-                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 text-black/80">
+                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-normal flex items-center gap-1 text-black/80">
                     <Eye size={12} /> View
                   </button>
                 </td>
@@ -370,7 +370,7 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
 const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   if (user.role === 'PATIENT') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+      <h2 className="text-lg font-normal flex items-center gap-2 text-black">
         <Hospital size={20} className="text-black/80" /> My Health Portal
       </h2>
       <div className="grid grid-cols-2 gap-3 flex-1">
@@ -382,18 +382,18 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         ].map((k, i) => (
           <div key={i} className="nm-inset p-4 rounded-xl flex flex-col gap-1">
             <k.icon size={20} className={k.color} />
-            <p className="text-xl font-black">{k.value}</p>
-            <p className="text-[11px] font-medium opacity-60">{k.label}</p>
+            <p className="text-xl font-normal">{k.value}</p>
+            <p className="text-[11px] font-normal opacity-60">{k.label}</p>
           </div>
         ))}
         <div className="col-span-2 nm-inset p-4 rounded-xl">
-          <p className="text-xs font-black uppercase mb-2 opacity-60">Next Appointment</p>
+          <p className="text-xs font-normal uppercase mb-2 opacity-60">Next Appointment</p>
           <div className="nm-flat p-3 rounded-xl flex items-center justify-between">
             <div>
-              <p className="font-black">Dr. Sarah Wilson – Cardiology</p>
-              <p className="text-xs opacity-60 font-medium">Today at 11:00 AM • Token #3</p>
+              <p className="font-normal">Dr. Sarah Wilson – Cardiology</p>
+              <p className="text-xs opacity-60 font-normal">Today at 11:00 AM • Token #3</p>
             </div>
-            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-bold text-black">Confirmed</span>
+            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-normal text-black">Confirmed</span>
           </div>
         </div>
       </div>
@@ -402,7 +402,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 
   if (user.role === 'DOCTOR') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+      <h2 className="text-lg font-normal flex items-center gap-2 text-black">
         <Stethoscope size={20} className="text-black/80" /> Doctor's Station — {user.fullName}
       </h2>
       <div className="grid grid-cols-4 gap-2">
@@ -414,18 +414,18 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
-            <p className="text-xl font-black mt-1">{k.value}</p>
-            <p className="text-[10px] font-medium opacity-60">{k.label}</p>
+            <p className="text-xl font-normal mt-1">{k.value}</p>
+            <p className="text-[10px] font-normal opacity-60">{k.label}</p>
           </div>
         ))}
       </div>
       <div className="flex-1 nm-inset p-3 rounded-xl">
-        <p className="text-[10px] font-black uppercase opacity-60 mb-2">Today's Patient Queue</p>
+        <p className="text-[10px] font-normal uppercase opacity-60 mb-2">Today's Patient Queue</p>
         <div className="space-y-1.5">
           {['Rahul Sen – Token #01 – CHECKED IN','Harpreet Kaur – Token #02 – WAITING','Meenal Joshi – Token #03 – SCHEDULED'].map((q, i) => (
             <div key={i} className={`nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs ${i===0 ? 'border-l-4 border-black/40':''}`}>
-              <span className="font-bold">{q}</span>
-              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold text-black">Active</span>}
+              <span className="font-normal">{q}</span>
+              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-normal text-black">Active</span>}
             </div>
           ))}
         </div>
@@ -435,7 +435,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 
   if (user.role === 'LAB_TECHNICIAN') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+      <h2 className="text-lg font-normal flex items-center gap-2 text-black">
         <FlaskConical size={20} className="text-black/60" /> Lab Technician Dashboard
       </h2>
       <div className="grid grid-cols-3 gap-2">
@@ -446,13 +446,13 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
-            <p className="text-xl font-black mt-1">{k.value}</p>
-            <p className="text-[10px] font-medium opacity-60">{k.label}</p>
+            <p className="text-xl font-normal mt-1">{k.value}</p>
+            <p className="text-[10px] font-normal opacity-60">{k.label}</p>
           </div>
         ))}
       </div>
       <div className="flex-1 nm-inset p-3 rounded-xl">
-        <p className="text-[10px] font-black uppercase opacity-60 mb-2">Pending Lab Orders</p>
+        <p className="text-[10px] font-normal uppercase opacity-60 mb-2">Pending Lab Orders</p>
         <div className="space-y-1.5">
           {[
             {name:'Rahul Sen', test:'Complete Blood Count (CBC)', status:'SAMPLE_COLLECTED'},
@@ -461,10 +461,10 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
           ].map((o, i) => (
             <div key={i} className="nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs">
               <div>
-                <p className="font-black">{o.name}</p>
-                <p className="opacity-60 font-medium">{o.test}</p>
+                <p className="font-normal">{o.name}</p>
+                <p className="opacity-60 font-normal">{o.test}</p>
               </div>
-              <span className={`nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold ${
+              <span className={`nm-inset px-2 py-0.5 rounded-full text-[10px] font-normal ${
                 o.status==='SAMPLE_COLLECTED'?'text-black/80':o.status==='PROCESSING'?'text-black/40':'text-black/60'
               }`}>{o.status.replace('_',' ')}</span>
             </div>
@@ -477,7 +477,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   // SUPER_ADMIN / RECEPTIONIST default
   return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+      <h2 className="text-lg font-normal flex items-center gap-2 text-black">
         <LayoutDashboard size={20} className="text-black/80" /> Hospital Command Center
       </h2>
       <div className="grid grid-cols-4 gap-2">
@@ -490,18 +490,18 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
           <div key={i} className="nm-inset p-3 rounded-xl">
             <div className="flex items-center justify-between mb-1">
               <kpi.icon size={16} className={kpi.color} />
-              <span className="text-[9px] uppercase font-black opacity-40">Live</span>
+              <span className="text-[9px] uppercase font-normal opacity-40">Live</span>
             </div>
-            <p className="text-lg font-black">{kpi.value}</p>
-            <p className="text-[10px] font-medium opacity-60">{kpi.label}</p>
+            <p className="text-lg font-normal">{kpi.value}</p>
+            <p className="text-[10px] font-normal opacity-60">{kpi.label}</p>
           </div>
         ))}
       </div>
       <div className="flex gap-3 flex-1 min-h-0">
         <div className="nm-inset p-3 rounded-xl flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] font-black uppercase opacity-60">Recent Registrations</p>
-            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold text-black/80 flex items-center gap-1">
+            <p className="text-[10px] font-normal uppercase opacity-60">Recent Registrations</p>
+            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-normal text-black/80 flex items-center gap-1">
               View All <ArrowRight size={10} />
             </button>
           </div>
@@ -509,24 +509,24 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
             {patients.slice(0, 5).map((p: Patient) => (
               <div key={p.id} className="nm-flat p-2 rounded-xl text-xs flex justify-between items-center hover:scale-[1.01] transition-transform">
                 <div>
-                  <p className="font-black">{p.fullName}</p>
-                  <p className="opacity-50 font-medium">{p.uhid}</p>
+                  <p className="font-normal">{p.fullName}</p>
+                  <p className="opacity-50 font-normal">{p.uhid}</p>
                 </div>
-                <span className="bg-white font-bold px-2 py-0.5 rounded-full font-bold text-[10px]">Active</span>
+                <span className="bg-white font-normal px-2 py-0.5 rounded-full font-normal text-[10px]">Active</span>
               </div>
             ))}
           </div>
         </div>
         <div className="nm-inset p-3 rounded-xl w-56 flex flex-col">
-          <p className="text-[10px] font-black uppercase opacity-60 mb-2">Pharmacy Alerts</p>
+          <p className="text-[10px] font-normal uppercase opacity-60 mb-2">Pharmacy Alerts</p>
           <div className="nm-flat p-2.5 rounded-xl border-l-4 border-black/40 animate-pulse">
-            <p className="text-[11px] font-black">⚠ Critical Low Stock</p>
-            <p className="text-[10px] opacity-60 font-medium">Paracetamol 500mg</p>
-            <p className="text-[10px] opacity-60 font-medium">Batch PM-109 • 8 units left</p>
+            <p className="text-[11px] font-normal">⚠ Critical Low Stock</p>
+            <p className="text-[10px] opacity-60 font-normal">Paracetamol 500mg</p>
+            <p className="text-[10px] opacity-60 font-normal">Batch PM-109 • 8 units left</p>
           </div>
           <div className="mt-2 nm-flat p-2.5 rounded-xl border-l-4 border-gray-300">
-            <p className="text-[11px] font-black">Lab Result Ready</p>
-            <p className="text-[10px] opacity-60 font-medium">CBC – Rahul Sen</p>
+            <p className="text-[11px] font-normal">Lab Result Ready</p>
+            <p className="text-[10px] opacity-60 font-normal">CBC – Rahul Sen</p>
           </div>
         </div>
       </div>
@@ -540,8 +540,8 @@ const PlaceholderModule = ({ label, icon: Icon, color = 'text-black/80' }: any) 
     <div className="nm-inset p-8 rounded-full mb-4">
       <Icon size={64} className={`opacity-30 ${color}`} />
     </div>
-    <h3 className="text-xl font-black text-gray-700">{label} Module</h3>
-    <p className="text-xs opacity-50 font-bold max-w-xs mt-1">
+    <h3 className="text-xl font-normal text-gray-700">{label} Module</h3>
+    <p className="text-xs opacity-50 font-normal max-w-xs mt-1">
       This module is fully wired to the backend API. UI deployment in progress.
     </p>
   </div>
@@ -602,8 +602,8 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           <div className="inline-flex nm-inset p-4 rounded-full mb-3">
             <Hospital size={44} className="text-[#4361ee]" />
           </div>
-          <h1 className="text-3xl font-black text-black tracking-tighter">MediCore</h1>
-          <p className="text-[11px] font-bold uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
+          <h1 className="text-3xl font-normal text-black tracking-tighter">iMAT.H1</h1>
+          <p className="text-[11px] font-normal uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
         </div>
 
         {/* Role Tabs */}
@@ -611,10 +611,10 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           {ROLE_TABS.map(r => (
             <button key={r.key} onClick={() => handleTabChange(r.key)}
               className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all text-center ${
-                roleTab === r.key ? `nm-flat text-[#4361ee] font-black` : 'opacity-50 font-bold hover:opacity-75'
+                roleTab === r.key ? `nm-flat text-[#4361ee] font-normal` : 'opacity-50 font-normal hover:opacity-75'
               }`}>
               <r.icon size={18} />
-              <span className="text-[9px] uppercase font-black leading-none">{r.label}</span>
+              <span className="text-[9px] uppercase font-normal leading-none">{r.label}</span>
             </button>
           ))}
         </div>
@@ -622,32 +622,32 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
         {/* Fields */}
         <div className="space-y-3">
           <div>
-            <label className="text-[10px] font-black uppercase opacity-60 ml-2">Email Address</label>
+            <label className="text-[10px] font-normal uppercase opacity-60 ml-2">Email Address</label>
             <div className="nm-inset px-4 py-3 rounded-xl mt-1">
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                className="bg-transparent w-full outline-none text-sm font-medium" />
+                className="bg-transparent w-full outline-none text-sm font-normal" />
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-black uppercase opacity-60 ml-2">Password</label>
+            <label className="text-[10px] font-normal uppercase opacity-60 ml-2">Password</label>
             <div className="nm-inset px-4 py-3 rounded-xl mt-1 flex items-center gap-2">
               <input type={showPwd ? 'text' : 'password'} value={password}
                 onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                className="bg-transparent w-full outline-none text-sm font-medium flex-1" />
+                className="bg-transparent w-full outline-none text-sm font-normal flex-1" />
               <button onClick={() => setShowPwd(!showPwd)} className="opacity-50 hover:opacity-80 shrink-0">
                 {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
           {error && (
-            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-black/40 text-black text-xs font-bold flex items-center gap-2">
+            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-black/40 text-black text-xs font-normal flex items-center gap-2">
               <AlertCircle size={14} /> {error}
             </div>
           )}
           <button onClick={handleLogin} disabled={loading}
-            className={`nm-button-accent w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-black cursor-pointer disabled:opacity-40`}>
+            className={`nm-button-accent w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-normal cursor-pointer disabled:opacity-40`}>
             {loading ? <span className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" /> :
               <><tab.icon size={20} /> Login as {tab.label}</>}
           </button>
@@ -655,13 +655,13 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
 
         {/* Quick credential hints */}
         <div className="mt-4 nm-inset p-3 rounded-xl">
-          <p className="text-[9px] font-black uppercase opacity-50 mb-1.5">Demo Credentials</p>
+          <p className="text-[9px] font-normal uppercase opacity-50 mb-1.5">Demo Credentials</p>
           <div className="grid grid-cols-2 gap-1">
             {DEMO_ACCOUNTS.filter(a=>['SUPER_ADMIN','DOCTOR','LAB_TECHNICIAN','PATIENT'].includes(a.role)).map(a => (
               <button key={a.id} onClick={() => { setEmail(a.email); setPassword(a.password); setRoleTab(a.role); }}
                 className="nm-flat p-1.5 rounded-lg text-left hover:scale-[1.02] transition-transform">
-                <p className="text-[10px] font-black">{a.fullName}</p>
-                <p className="text-[9px] opacity-50 font-medium">{a.role.replace('_',' ')}</p>
+                <p className="text-[10px] font-normal">{a.fullName}</p>
+                <p className="text-[9px] opacity-50 font-normal">{a.role.replace('_',' ')}</p>
               </button>
             ))}
           </div>
@@ -748,7 +748,7 @@ export default function App() {
       <div className="nm-flat p-8 rounded-full">
         <Hospital size={48} className="text-[#4361ee] animate-pulse" />
       </div>
-      <p className="font-black text-lg text-[#4361ee] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
+      <p className="font-normal text-lg text-[#4361ee] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
     </div>
   );
 
@@ -785,8 +785,8 @@ export default function App() {
             <Hospital size={22} />
           </div>
           <div className="hidden lg:block overflow-hidden">
-            <p className="font-black text-lg text-black tracking-tighter leading-none">MediCore</p>
-            <p className="text-[9px] font-bold opacity-40 uppercase leading-none">HMS v2</p>
+            <p className="font-normal text-lg text-black tracking-tighter leading-none">iMAT.H1</p>
+            <p className="text-[9px] font-normal opacity-40 uppercase leading-none">HMS v2</p>
           </div>
         </div>
 
@@ -795,7 +795,7 @@ export default function App() {
             <button key={item.id} onClick={() => setActiveTab(item.id)}
               className={`w-full p-2.5 rounded-xl flex items-center gap-2.5 transition-all text-left ${
                 activeTab === item.id
-                  ? `nm-inset ${ROLE_BADGE_COLORS[user.role]} font-black`
+                  ? `nm-inset ${ROLE_BADGE_COLORS[user.role]} font-normal`
                   : 'hover:nm-button opacity-60 hover:text-[#8338ec]'
               }`}>
               <item.icon size={18} className="shrink-0" />
@@ -806,12 +806,12 @@ export default function App() {
 
         {/* User mini-card */}
         <div className="mt-2 nm-inset p-2 rounded-xl hidden lg:block">
-          <p className="text-[10px] font-black truncate">{user.fullName}</p>
-          <p className={`text-[9px] font-bold opacity-70 ${ROLE_BADGE_COLORS[user.role]}`}>
+          <p className="text-[10px] font-normal truncate">{user.fullName}</p>
+          <p className={`text-[9px] font-normal opacity-70 ${ROLE_BADGE_COLORS[user.role]}`}>
             {user.role.replace('_',' ')}
           </p>
         </div>
-        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-[#4361ee] font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
+        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-[#4361ee] font-normal flex items-center gap-2.5 hover:opacity-90 transition-all">
           <LogOut size={18} className="shrink-0" />
           <span className="text-[11px] hidden lg:block">Sign Out</span>
         </button>
@@ -822,10 +822,10 @@ export default function App() {
         {/* Header bar */}
         <header className="nm-flat h-[54px] rounded-2xl flex items-center justify-between px-4 shrink-0 gap-3">
           <div className="flex items-center gap-3 overflow-hidden">
-            <h2 className="font-black text-base text-black uppercase tracking-widest truncate">
+            <h2 className="font-normal text-base text-black uppercase tracking-widest truncate">
               {navItems.find(m => m.id === activeTab)?.label || 'Dashboard'}
             </h2>
-            <div className="hidden md:flex items-center gap-1.5 nm-inset px-3 py-1 rounded-full text-[11px] font-bold shrink-0">
+            <div className="hidden md:flex items-center gap-1.5 nm-inset px-3 py-1 rounded-full text-[11px] font-normal shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-black/40 animate-pulse"></span>
               <span className="text-black/60">System Online</span>
             </div>
@@ -836,12 +836,12 @@ export default function App() {
               <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-gray-800 rounded-full border-2 border-[#e0e5ec]"></span>
             </button>
             <div className="flex items-center gap-2 nm-inset px-3 py-1.5 rounded-full">
-              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-black text-black/80">
+              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-normal text-black/80">
                 {user.fullName.charAt(0)}
               </div>
               <div className="hidden sm:block">
-                <p className="text-[10px] font-black leading-none">{user.fullName.split(' ')[0]}</p>
-                <p className={`text-[8px] font-black ${ROLE_BADGE_COLORS[user.role]} leading-none`}>
+                <p className="text-[10px] font-normal leading-none">{user.fullName.split(' ')[0]}</p>
+                <p className={`text-[8px] font-normal ${ROLE_BADGE_COLORS[user.role]} leading-none`}>
                   {user.role.replace('_',' ')}
                 </p>
               </div>
