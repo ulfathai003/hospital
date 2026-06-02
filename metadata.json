@@ -1,0 +1,6 @@
+{
+  "name": "Hospital Management System & CRM",
+  "description": "An enterprise-grade, role-based platform for multi-branch patient registration, clinical EMR, doctor queue scheduling, prescription management, billing, pharmacy inventory, lab reports, and strategic CRM campaigns.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
