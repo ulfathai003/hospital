@@ -197,7 +197,7 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
             
             {/* System Controlled Info */}
             <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl bg-[var(--color-nm-accent-light)]/10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#8338ec]">Personal Information</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#4361ee]">Personal Information</span>
             </div>
 
             <S label="Registration Type" field="registrationType" options={REG_TYPES} required half />
@@ -299,8 +299,8 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-black flex items-center gap-2 text-black">
-          <Users size={20} className="text-[#8338ec]" /> Patient Registry
-          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[#8338ec]">{patients.length}</span>
+          <Users size={20} className="text-[#4361ee]" /> Patient Registry
+          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[#4361ee]">{patients.length}</span>
         </h2>
         {canRegister && (
           <NmBtn onClick={() => setShowReg(true)} accent className="flex items-center gap-2">
@@ -334,8 +334,8 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
             {filtered.length === 0 ? (
               <tr><td colSpan={7} className="py-8 text-center opacity-40 font-bold">No patients found</td></tr>
             ) : filtered.map((p: Patient) => (
-              <tr key={p.id} className="hover:bg-[var(--color-nm-accent-light)]/5 transition-colors">
-                <td className="py-2 pr-3 font-bold text-[#8338ec]">{p.uhid}</td>
+              <tr key={p.id} className="hover:bg-[#8338ec]/5 transition-colors">
+                <td className="py-2 pr-3 font-bold text-[#4361ee]">{p.uhid}</td>
                 <td className="py-2 pr-3 font-black">{p.fullName}</td>
                 <td className="py-2 pr-3 font-medium">{p.gender}</td>
                 <td className="py-2 pr-3 font-medium">{p.mobileNo}</td>
@@ -375,10 +375,10 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
       </h2>
       <div className="grid grid-cols-2 gap-3 flex-1">
         {[
-          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-[#8338ec]' },
-          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-[#8338ec]' },
-          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-[#8338ec]' },
-          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-[#8338ec]' },
+          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-[#4361ee]' },
+          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-[#4361ee]' },
+          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-[#4361ee]' },
+          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-[#4361ee]' },
         ].map((k, i) => (
           <div key={i} className="nm-inset p-4 rounded-xl flex flex-col gap-1">
             <k.icon size={20} className={k.color} />
@@ -482,10 +482,10 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
-          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-[#8338ec]' },
-          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-[#8338ec]'},
-          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-[#8338ec]'},
-          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-[#8338ec]'},
+          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-[#4361ee]' },
+          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-[#4361ee]'},
+          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-[#4361ee]'},
+          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-[#4361ee]'},
         ].map((kpi, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <div className="flex items-center justify-between mb-1">
@@ -600,7 +600,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
         {/* Logo */}
         <div className="text-center mb-5">
           <div className="inline-flex nm-inset p-4 rounded-full mb-3">
-            <Hospital size={44} className="text-[#8338ec]" />
+            <Hospital size={44} className="text-[#4361ee]" />
           </div>
           <h1 className="text-3xl font-black text-black tracking-tighter">MediCore</h1>
           <p className="text-[11px] font-bold uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
@@ -611,7 +611,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           {ROLE_TABS.map(r => (
             <button key={r.key} onClick={() => handleTabChange(r.key)}
               className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all text-center ${
-                roleTab === r.key ? `nm-flat text-[#8338ec] font-black` : 'opacity-50 font-bold hover:opacity-75'
+                roleTab === r.key ? `nm-flat text-[#4361ee] font-black` : 'opacity-50 font-bold hover:opacity-75'
               }`}>
               <r.icon size={18} />
               <span className="text-[9px] uppercase font-black leading-none">{r.label}</span>
@@ -716,8 +716,8 @@ const NAV_BY_ROLE: Record<string, Array<{ id: string; icon: any; label: string }
 };
 
 const ROLE_BADGE_COLORS: Record<string,string> = {
-  SUPER_ADMIN:'text-[#8338ec]', DOCTOR:'text-[#8338ec]', LAB_TECHNICIAN:'text-[#8338ec]',
-  PATIENT:'text-[#8338ec]', RECEPTIONIST:'text-[#8338ec]', PHARMACIST:'text-[#8338ec]',
+  SUPER_ADMIN:'text-[#4361ee]', DOCTOR:'text-[#4361ee]', LAB_TECHNICIAN:'text-[#4361ee]',
+  PATIENT:'text-[#4361ee]', RECEPTIONIST:'text-[#4361ee]', PHARMACIST:'text-[#4361ee]',
 };
 
 // ─── MAIN APP ──────────────────────────────────────────────────────────────────
@@ -746,9 +746,9 @@ export default function App() {
   if (loading) return (
     <div className="h-screen flex flex-col items-center justify-center gap-4 bg-[var(--color-nm-bg)]">
       <div className="nm-flat p-8 rounded-full">
-        <Hospital size={48} className="text-[#8338ec] animate-pulse" />
+        <Hospital size={48} className="text-[#4361ee] animate-pulse" />
       </div>
-      <p className="font-black text-lg text-[#8338ec] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
+      <p className="font-black text-lg text-[#4361ee] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
     </div>
   );
 
@@ -796,7 +796,7 @@ export default function App() {
               className={`w-full p-2.5 rounded-xl flex items-center gap-2.5 transition-all text-left ${
                 activeTab === item.id
                   ? `nm-inset ${ROLE_BADGE_COLORS[user.role]} font-black`
-                  : 'hover:nm-button opacity-60 hover:opacity-90 font-bold'
+                  : 'hover:nm-button opacity-60 hover:text-[#8338ec]'
               }`}>
               <item.icon size={18} className="shrink-0" />
               <span className="text-[11px] hidden lg:block truncate">{item.label}</span>
@@ -811,7 +811,7 @@ export default function App() {
             {user.role.replace('_',' ')}
           </p>
         </div>
-        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-[#8338ec] font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
+        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-[#4361ee] font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
           <LogOut size={18} className="shrink-0" />
           <span className="text-[11px] hidden lg:block">Sign Out</span>
         </button>

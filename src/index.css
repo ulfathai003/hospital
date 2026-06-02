@@ -5,9 +5,9 @@
   --color-nm-bg: #ffffff;
   --color-nm-shadow-light: #ffffff;
   --color-nm-shadow-dark: #f0f0f0;
-  --color-nm-accent: #8338ec;
-  --color-nm-accent-light: #9d50bb;
-  --nm-border: 1px solid rgba(0, 0, 0, 0.05);
+  --color-nm-accent: #4361ee;
+  --color-nm-accent-light: #8338ec;
+  --nm-border: 1px solid rgba(67, 97, 238, 0.1);
 }
 
 html {
@@ -49,21 +49,22 @@ body {
     transform: translateY(-2px);
     border-color: var(--color-nm-accent);
     color: var(--color-nm-accent);
+    background: rgba(67, 97, 238, 0.02);
   }
 
   .nm-button-accent {
     background: var(--color-nm-accent);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 4px 4px 12px rgba(131, 56, 236, 0.3),
+    box-shadow: 4px 4px 12px rgba(67, 97, 238, 0.2),
                 -4px -4px 12px rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .nm-button-accent:hover {
-    filter: brightness(1.1);
+    background: var(--color-nm-accent-light);
     transform: translateY(-2px);
-    box-shadow: 6px 6px 16px rgba(131, 56, 236, 0.4);
+    box-shadow: 6px 6px 16px rgba(131, 56, 236, 0.3);
   }
 
   .nm-button:active, .nm-button-accent:active {
