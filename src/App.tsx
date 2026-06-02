@@ -71,7 +71,7 @@ const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disa
 const Toast = ({ msg, type, onClose }: { msg: string; type: 'success' | 'error'; onClose: () => void }) => (
   <motion.div initial={{ opacity: 0, y: -40, x: '50%', right: '50%' }}
     animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }}
-    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-bold shadow-2xl ${type === 'success' ? 'text-green-700' : 'text-red-600'}`}>
+    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-bold shadow-2xl ${type === 'success' ? 'text-gray-900' : 'text-gray-900'}`}>
     {type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
     <span>{msg}</span>
     <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100"><X size={16} /></button>
@@ -150,20 +150,20 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
   const F = ({ label, field, type='text', required=false, half=false, disabled=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
       <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
-        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+        {label}{required && <span className="text-gray-900 ml-0.5">*</span>}
       </label>
-      <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-red-400' : ''} ${disabled ? 'opacity-50' : ''}`}>
+      <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-gray-400' : ''} ${disabled ? 'opacity-50' : ''}`}>
         <input type={type} value={(form as any)[field]} onChange={e => set(field, e.target.value)}
           disabled={disabled} placeholder={label} className="bg-transparent w-full outline-none text-sm font-medium" />
       </div>
-      {errors[field] && <p className="text-red-500 text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
+      {errors[field] && <p className="text-gray-900 text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
     </div>
   );
 
   const S = ({ label, field, options, half=false, required=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
       <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
-        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+        {label}{required && <span className="text-gray-900 ml-0.5">*</span>}
       </label>
       <div className="nm-inset px-3 py-2 rounded-xl mt-0.5 relative">
         <select value={(form as any)[field]} onChange={e => set(field, e.target.value)}
@@ -183,7 +183,7 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
 
         <div className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="nm-inset p-2 rounded-xl text-blue-600"><Users size={20} /></div>
+            <div className="nm-inset p-2 rounded-xl text-gray-600"><Users size={20} /></div>
             <div>
               <h2 className="font-black text-gray-800">Advanced Patient Registration</h2>
               <p className="text-[10px] opacity-60 font-medium uppercase tracking-tighter">Following Specification Sheet SL-01 to 18</p>
@@ -196,8 +196,8 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
             
             {/* System Controlled Info */}
-            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl bg-[#a3b18a]/20">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#588157]">Personal Information</span>
+            <div className="col-span-2 nm-inset px-3 py-1.5 rounded-xl bg-[var(--color-nm-accent-light)]/10">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[var(--color-nm-accent)]">Personal Information</span>
             </div>
 
             <S label="Registration Type" field="registrationType" options={REG_TYPES} required half />
@@ -250,7 +250,7 @@ const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: (
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div>
           <h2 className="font-black text-gray-800">{patient.fullName}</h2>
-          <p className="text-[11px] font-bold text-blue-600">{patient.uhid}</p>
+          <p className="text-[11px] font-bold text-gray-600">{patient.uhid}</p>
         </div>
         <button onClick={onClose} className="nm-button p-2 rounded-xl"><X size={18} /></button>
       </div>
@@ -299,8 +299,8 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-          <Users size={20} className="text-[#588157]" /> Patient Registry
-          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[#588157]">{patients.length}</span>
+          <Users size={20} className="text-[var(--color-nm-accent)]" /> Patient Registry
+          <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[var(--color-nm-accent)]">{patients.length}</span>
         </h2>
         {canRegister && (
           <NmBtn onClick={() => setShowReg(true)} accent className="flex items-center gap-2">
@@ -334,8 +334,8 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
             {filtered.length === 0 ? (
               <tr><td colSpan={7} className="py-8 text-center opacity-40 font-bold">No patients found</td></tr>
             ) : filtered.map((p: Patient) => (
-              <tr key={p.id} className="hover:bg-[#a3b18a]/10 transition-colors">
-                <td className="py-2 pr-3 font-bold text-[#588157]">{p.uhid}</td>
+              <tr key={p.id} className="hover:bg-[var(--color-nm-accent-light)]/5 transition-colors">
+                <td className="py-2 pr-3 font-bold text-[var(--color-nm-accent)]">{p.uhid}</td>
                 <td className="py-2 pr-3 font-black">{p.fullName}</td>
                 <td className="py-2 pr-3 font-medium">{p.gender}</td>
                 <td className="py-2 pr-3 font-medium">{p.mobileNo}</td>
@@ -344,11 +344,11 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
                 </td>
                 <td className="py-2 pr-3">
                   <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                    p.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    p.status === 'Active' ? 'bg-gray-200 text-gray-700' : 'bg-gray-100 text-gray-500'
                   }`}>{p.status}</span>
                 </td>
                 <td className="py-2">
-                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 text-blue-600">
+                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 text-gray-600">
                     <Eye size={12} /> View
                   </button>
                 </td>
@@ -371,14 +371,14 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   if (user.role === 'PATIENT') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <Hospital size={20} className="text-blue-500" /> My Health Portal
+        <Hospital size={20} className="text-gray-600" /> My Health Portal
       </h2>
       <div className="grid grid-cols-2 gap-3 flex-1">
         {[
-          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-[#588157]' },
-          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-[#588157]' },
-          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-[#588157]' },
-          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-[#588157]' },
+          { label:'My UHID', value: user.uhid || 'UHID-2026-0001', icon: UserCheck, color:'text-[var(--color-nm-accent)]' },
+          { label:'Active Appointments', value: '2', icon: Calendar, color:'text-[var(--color-nm-accent)]' },
+          { label:'Lab Results Pending', value: '1', icon: FlaskConical, color:'text-[var(--color-nm-accent)]' },
+          { label:'Outstanding Bills', value: '₹2,400', icon: CreditCard, color:'text-[var(--color-nm-accent)]' },
         ].map((k, i) => (
           <div key={i} className="nm-inset p-4 rounded-xl flex flex-col gap-1">
             <k.icon size={20} className={k.color} />
@@ -393,7 +393,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
               <p className="font-black">Dr. Sarah Wilson – Cardiology</p>
               <p className="text-xs opacity-60 font-medium">Today at 11:00 AM • Token #3</p>
             </div>
-            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-bold text-green-700">Confirmed</span>
+            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-bold text-gray-900">Confirmed</span>
           </div>
         </div>
       </div>
@@ -403,14 +403,14 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   if (user.role === 'DOCTOR') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <Stethoscope size={20} className="text-blue-500" /> Doctor's Station — {user.fullName}
+        <Stethoscope size={20} className="text-gray-600" /> Doctor's Station — {user.fullName}
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
-          { label:"Today's OPD",  value:'8',  icon:Calendar,  color:'text-blue-600' },
-          { label:'In Queue',     value:'3',  icon:Activity,  color:'text-green-600' },
-          { label:'Lab Orders',   value:'5',  icon:Microscope,color:'text-purple-600'},
-          { label:'Prescriptions',value:'12', icon:Pill,      color:'text-amber-600'},
+          { label:"Today's OPD",  value:'8',  icon:Calendar,  color:'text-gray-600' },
+          { label:'In Queue',     value:'3',  icon:Activity,  color:'text-gray-800' },
+          { label:'Lab Orders',   value:'5',  icon:Microscope,color:'text-gray-500'},
+          { label:'Prescriptions',value:'12', icon:Pill,      color:'text-gray-400'},
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
@@ -423,9 +423,9 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         <p className="text-[10px] font-black uppercase opacity-60 mb-2">Today's Patient Queue</p>
         <div className="space-y-1.5">
           {['Rahul Sen – Token #01 – CHECKED IN','Harpreet Kaur – Token #02 – WAITING','Meenal Joshi – Token #03 – SCHEDULED'].map((q, i) => (
-            <div key={i} className={`nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs ${i===0 ? 'border-l-4 border-green-500':''}`}>
+            <div key={i} className={`nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs ${i===0 ? 'border-l-4 border-gray-400':''}`}>
               <span className="font-bold">{q}</span>
-              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold text-green-700">Active</span>}
+              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-900">Active</span>}
             </div>
           ))}
         </div>
@@ -436,13 +436,13 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   if (user.role === 'LAB_TECHNICIAN') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <FlaskConical size={20} className="text-purple-500" /> Lab Technician Dashboard
+        <FlaskConical size={20} className="text-gray-500" /> Lab Technician Dashboard
       </h2>
       <div className="grid grid-cols-3 gap-2">
         {[
-          { label:'Orders Today',    value:'14', icon:FileText,    color:'text-blue-600' },
-          { label:'Sample Pending',  value:'4',  icon:FlaskConical,color:'text-amber-600'},
-          { label:'Reports Approved',value:'6',  icon:CheckCircle, color:'text-green-600'},
+          { label:'Orders Today',    value:'14', icon:FileText,    color:'text-gray-600' },
+          { label:'Sample Pending',  value:'4',  icon:FlaskConical,color:'text-gray-400'},
+          { label:'Reports Approved',value:'6',  icon:CheckCircle, color:'text-gray-800'},
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
@@ -465,7 +465,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
                 <p className="opacity-60 font-medium">{o.test}</p>
               </div>
               <span className={`nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                o.status==='SAMPLE_COLLECTED'?'text-blue-600':o.status==='PROCESSING'?'text-amber-600':'text-gray-500'
+                o.status==='SAMPLE_COLLECTED'?'text-gray-600':o.status==='PROCESSING'?'text-gray-400':'text-gray-500'
               }`}>{o.status.replace('_',' ')}</span>
             </div>
           ))}
@@ -478,14 +478,14 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <LayoutDashboard size={20} className="text-blue-500" /> Hospital Command Center
+        <LayoutDashboard size={20} className="text-gray-600" /> Hospital Command Center
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
-          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-[#588157]' },
-          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-[#588157]'},
-          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-[#588157]'},
-          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-[#588157]'},
+          { label:'Total Patients', value: String(patients.length), icon:Users,     color:'text-[var(--color-nm-accent)]' },
+          { label:'Active OPDs',    value:'42',                     icon:Calendar,  color:'text-[var(--color-nm-accent)]'},
+          { label:'Beds Occupied',  value:'18/45',                  icon:Hospital,  color:'text-[var(--color-nm-accent)]'},
+          { label:'Revenue Today',  value:'₹42,500',                icon:BarChart3, color:'text-[var(--color-nm-accent)]'},
         ].map((kpi, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <div className="flex items-center justify-between mb-1">
@@ -501,7 +501,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         <div className="nm-inset p-3 rounded-xl flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[10px] font-black uppercase opacity-60">Recent Registrations</p>
-            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold text-blue-600 flex items-center gap-1">
+            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold text-gray-600 flex items-center gap-1">
               View All <ArrowRight size={10} />
             </button>
           </div>
@@ -512,19 +512,19 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
                   <p className="font-black">{p.fullName}</p>
                   <p className="opacity-50 font-medium">{p.uhid}</p>
                 </div>
-                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold text-[10px]">Active</span>
+                <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-bold text-[10px]">Active</span>
               </div>
             ))}
           </div>
         </div>
         <div className="nm-inset p-3 rounded-xl w-56 flex flex-col">
           <p className="text-[10px] font-black uppercase opacity-60 mb-2">Pharmacy Alerts</p>
-          <div className="nm-flat p-2.5 rounded-xl border-l-4 border-red-500 animate-pulse">
+          <div className="nm-flat p-2.5 rounded-xl border-l-4 border-gray-400 animate-pulse">
             <p className="text-[11px] font-black">⚠ Critical Low Stock</p>
             <p className="text-[10px] opacity-60 font-medium">Paracetamol 500mg</p>
             <p className="text-[10px] opacity-60 font-medium">Batch PM-109 • 8 units left</p>
           </div>
-          <div className="mt-2 nm-flat p-2.5 rounded-xl border-l-4 border-amber-400">
+          <div className="mt-2 nm-flat p-2.5 rounded-xl border-l-4 border-gray-300">
             <p className="text-[11px] font-black">Lab Result Ready</p>
             <p className="text-[10px] opacity-60 font-medium">CBC – Rahul Sen</p>
           </div>
@@ -535,7 +535,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 };
 
 // ─── GENERIC PLACEHOLDER MODULE ────────────────────────────────────────────────
-const PlaceholderModule = ({ label, icon: Icon, color = 'text-blue-500' }: any) => (
+const PlaceholderModule = ({ label, icon: Icon, color = 'text-gray-600' }: any) => (
   <div className="nm-flat h-full rounded-2xl flex flex-col items-center justify-center p-8 text-center animate-fade-in">
     <div className="nm-inset p-8 rounded-full mb-4">
       <Icon size={64} className={`opacity-30 ${color}`} />
@@ -549,10 +549,10 @@ const PlaceholderModule = ({ label, icon: Icon, color = 'text-blue-500' }: any) 
 
 // ─── LOGIN SCREEN ──────────────────────────────────────────────────────────────
 const ROLE_TABS: Array<{ key: string; label: string; icon: any; color: string }> = [
-  { key: 'SUPER_ADMIN',    label: 'Admin / Staff', icon: Settings,   color: 'text-blue-600' },
-  { key: 'DOCTOR',         label: 'Doctor',        icon: Stethoscope,color: 'text-green-600'},
-  { key: 'LAB_TECHNICIAN', label: 'Technician',    icon: Microscope, color: 'text-purple-600'},
-  { key: 'PATIENT',        label: 'Patient',       icon: UserCheck,  color: 'text-amber-600'},
+  { key: 'SUPER_ADMIN',    label: 'Admin / Staff', icon: Settings,   color: 'text-gray-600' },
+  { key: 'DOCTOR',         label: 'Doctor',        icon: Stethoscope,color: 'text-gray-800'},
+  { key: 'LAB_TECHNICIAN', label: 'Technician',    icon: Microscope, color: 'text-gray-500'},
+  { key: 'PATIENT',        label: 'Patient',       icon: UserCheck,  color: 'text-gray-400'},
 ];
 
 const ROLE_HINTS: Record<string, string> = {
@@ -600,7 +600,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
         {/* Logo */}
         <div className="text-center mb-5">
           <div className="inline-flex nm-inset p-4 rounded-full mb-3">
-            <Hospital size={44} className="text-[#588157]" />
+            <Hospital size={44} className="text-[var(--color-nm-accent)]" />
           </div>
           <h1 className="text-3xl font-black text-gray-800 tracking-tighter">MediCore</h1>
           <p className="text-[11px] font-bold uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
@@ -611,7 +611,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           {ROLE_TABS.map(r => (
             <button key={r.key} onClick={() => handleTabChange(r.key)}
               className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all text-center ${
-                roleTab === r.key ? `nm-flat text-[#588157] font-black` : 'opacity-50 font-bold hover:opacity-75'
+                roleTab === r.key ? `nm-flat text-[var(--color-nm-accent)] font-black` : 'opacity-50 font-bold hover:opacity-75'
               }`}>
               <r.icon size={18} />
               <span className="text-[9px] uppercase font-black leading-none">{r.label}</span>
@@ -642,7 +642,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
             </div>
           </div>
           {error && (
-            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-red-400 text-red-600 text-xs font-bold flex items-center gap-2">
+            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-red-400 text-gray-900 text-xs font-bold flex items-center gap-2">
               <AlertCircle size={14} /> {error}
             </div>
           )}
@@ -716,8 +716,8 @@ const NAV_BY_ROLE: Record<string, Array<{ id: string; icon: any; label: string }
 };
 
 const ROLE_BADGE_COLORS: Record<string,string> = {
-  SUPER_ADMIN:'text-[#588157]', DOCTOR:'text-[#588157]', LAB_TECHNICIAN:'text-[#588157]',
-  PATIENT:'text-[#588157]', RECEPTIONIST:'text-[#588157]', PHARMACIST:'text-[#588157]',
+  SUPER_ADMIN:'text-[var(--color-nm-accent)]', DOCTOR:'text-[var(--color-nm-accent)]', LAB_TECHNICIAN:'text-[var(--color-nm-accent)]',
+  PATIENT:'text-[var(--color-nm-accent)]', RECEPTIONIST:'text-[var(--color-nm-accent)]', PHARMACIST:'text-[var(--color-nm-accent)]',
 };
 
 // ─── MAIN APP ──────────────────────────────────────────────────────────────────
@@ -746,9 +746,9 @@ export default function App() {
   if (loading) return (
     <div className="h-screen flex flex-col items-center justify-center gap-4 bg-[var(--color-nm-bg)]">
       <div className="nm-flat p-8 rounded-full">
-        <Hospital size={48} className="text-[#588157] animate-pulse" />
+        <Hospital size={48} className="text-[var(--color-nm-accent)] animate-pulse" />
       </div>
-      <p className="font-black text-lg text-[#588157] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
+      <p className="font-black text-lg text-[var(--color-nm-accent)] tracking-widest animate-pulse">LOADING MEDICORE HMS...</p>
     </div>
   );
 
@@ -765,12 +765,12 @@ export default function App() {
     switch (activeTab) {
       case 'dashboard':    return <DashboardModule user={user} patients={patients} setActiveTab={setActiveTab} />;
       case 'patients':     return <PatientsModule  user={user} patients={patients} setPatients={setPatients} showToast={showToast} />;
-      case 'appointments': return <PlaceholderModule label="Appointments" icon={Calendar} color="text-green-500" />;
-      case 'emr':          return <PlaceholderModule label="Clinical EMR" icon={Stethoscope} color="text-blue-500" />;
-      case 'lab':          return <PlaceholderModule label="Laboratory" icon={FlaskConical} color="text-purple-500" />;
-      case 'pharmacy':     return <PlaceholderModule label="Pharmacy" icon={Package} color="text-orange-500" />;
-      case 'billing':      return <PlaceholderModule label="Billing" icon={CreditCard} color="text-amber-500" />;
-      case 'crm':          return <PlaceholderModule label="CRM Leads" icon={TrendingUp} color="text-teal-500" />;
+      case 'appointments': return <PlaceholderModule label="Appointments" icon={Calendar} color="text-gray-600" />;
+      case 'emr':          return <PlaceholderModule label="Clinical EMR" icon={Stethoscope} color="text-gray-600" />;
+      case 'lab':          return <PlaceholderModule label="Laboratory" icon={FlaskConical} color="text-gray-500" />;
+      case 'pharmacy':     return <PlaceholderModule label="Pharmacy" icon={Package} color="text-gray-600" />;
+      case 'billing':      return <PlaceholderModule label="Billing" icon={CreditCard} color="text-gray-400" />;
+      case 'crm':          return <PlaceholderModule label="CRM Leads" icon={TrendingUp} color="text-gray-600" />;
       case 'admin':        return <PlaceholderModule label="Admin Control" icon={Settings} color="text-gray-500" />;
       default:             return <DashboardModule user={user} patients={patients} setActiveTab={setActiveTab} />;
     }
@@ -781,7 +781,7 @@ export default function App() {
       {/* ── SIDEBAR ── */}
       <nav className="nm-flat w-[66px] lg:w-[175px] rounded-2xl flex flex-col p-2 shrink-0 transition-all">
         <div className="flex items-center gap-2 px-2 py-3 mb-3">
-          <div className="nm-inset p-2 rounded-xl text-blue-600 shrink-0">
+          <div className="nm-inset p-2 rounded-xl text-gray-600 shrink-0">
             <Hospital size={22} />
           </div>
           <div className="hidden lg:block overflow-hidden">
@@ -811,7 +811,7 @@ export default function App() {
             {user.role.replace('_',' ')}
           </p>
         </div>
-        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-red-500 font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
+        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-gray-900 font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
           <LogOut size={18} className="shrink-0" />
           <span className="text-[11px] hidden lg:block">Sign Out</span>
         </button>
@@ -833,10 +833,10 @@ export default function App() {
           <div className="flex items-center gap-2 shrink-0">
             <button className="nm-button p-2 rounded-full relative">
               <Bell size={16} />
-              <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#e0e5ec]"></span>
+              <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-gray-800 rounded-full border-2 border-[#e0e5ec]"></span>
             </button>
             <div className="flex items-center gap-2 nm-inset px-3 py-1.5 rounded-full">
-              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-black text-blue-600">
+              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-black text-gray-600">
                 {user.fullName.charAt(0)}
               </div>
               <div className="hidden sm:block">

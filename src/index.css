@@ -2,11 +2,11 @@
 @import "tailwindcss";
 
 :root {
-  --color-nm-bg: #dad7cd;
-  --color-nm-shadow-light: #f1f0ec;
-  --color-nm-shadow-dark: #b8bca9;
-  --color-nm-accent: #588157;
-  --color-nm-accent-light: #a3b18a;
+  --color-nm-bg: #f0f2f5;
+  --color-nm-shadow-light: #ffffff;
+  --color-nm-shadow-dark: #d1d9e6;
+  --color-nm-accent: #2d3748;
+  --color-nm-accent-light: #4a5568;
 }
 
 body {
@@ -42,7 +42,7 @@ body {
   .nm-button-accent {
     background: var(--color-nm-accent-light);
     color: white;
-    box-shadow: 4px 4px 8px rgba(88, 129, 87, 0.4),
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15),
                 -4px -4px 8px rgba(255, 255, 255, 0.2);
     transition: all 0.2s ease;
   }
