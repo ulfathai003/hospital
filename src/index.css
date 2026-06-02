@@ -5,8 +5,13 @@
   --color-nm-bg: #ffffff;
   --color-nm-shadow-light: #ffffff;
   --color-nm-shadow-dark: #f0f0f0;
-  --color-nm-accent: #000000;
-  --color-nm-accent-light: #333333;
+  --color-nm-accent: #8338ec;
+  --color-nm-accent-light: #9d50bb;
+  --nm-border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -34,31 +39,47 @@ body {
 
   .nm-button {
     background: var(--color-nm-bg);
+    border: var(--nm-border);
     box-shadow: 4px 4px 8px var(--color-nm-shadow-dark),
                 -4px -4px 8px var(--color-nm-shadow-light);
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nm-button:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-nm-accent);
+    color: var(--color-nm-accent);
   }
 
   .nm-button-accent {
-    background: var(--color-nm-accent-light);
+    background: var(--color-nm-accent);
     color: white;
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15),
-                -4px -4px 8px rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 4px 4px 12px rgba(131, 56, 236, 0.3),
+                -4px -4px 12px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nm-button-accent:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 16px rgba(131, 56, 236, 0.4);
   }
 
   .nm-button:active, .nm-button-accent:active {
     box-shadow: inset 2px 2px 5px var(--color-nm-shadow-dark),
                 inset -2px -2px 5px var(--color-nm-shadow-light);
-    transform: scale(0.98);
+    transform: scale(0.96);
   }
 
   .nm-card {
     border-radius: 12px;
     padding: 1rem;
     background: var(--color-nm-bg);
+    border: var(--nm-border);
     box-shadow: 8px 8px 16px var(--color-nm-shadow-dark),
-                -8px -8px 16px var(--color-nm-shadow-light);
+                -6px -6px 12px var(--color-nm-shadow-light);
+    transition: all 0.3s ease;
   }
 
   /* Compact spacing rules */
