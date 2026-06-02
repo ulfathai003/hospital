@@ -71,7 +71,7 @@ const NmBtn = ({ children, onClick, className = '', type = 'button' as any, disa
 const Toast = ({ msg, type, onClose }: { msg: string; type: 'success' | 'error'; onClose: () => void }) => (
   <motion.div initial={{ opacity: 0, y: -40, x: '50%', right: '50%' }}
     animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }}
-    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-bold shadow-2xl ${type === 'success' ? 'text-gray-900' : 'text-gray-900'}`}>
+    className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-bold shadow-2xl ${type === 'success' ? 'text-black' : 'text-black'}`}>
     {type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
     <span>{msg}</span>
     <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100"><X size={16} /></button>
@@ -150,20 +150,20 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
   const F = ({ label, field, type='text', required=false, half=false, disabled=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
       <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
-        {label}{required && <span className="text-gray-900 ml-0.5">*</span>}
+        {label}{required && <span className="text-black ml-0.5">*</span>}
       </label>
       <div className={`nm-inset px-3 py-2 rounded-xl mt-0.5 ${errors[field] ? 'ring-2 ring-gray-400' : ''} ${disabled ? 'opacity-50' : ''}`}>
         <input type={type} value={(form as any)[field]} onChange={e => set(field, e.target.value)}
           disabled={disabled} placeholder={label} className="bg-transparent w-full outline-none text-sm font-medium" />
       </div>
-      {errors[field] && <p className="text-gray-900 text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
+      {errors[field] && <p className="text-black text-[10px] mt-0.5 ml-1">{errors[field]}</p>}
     </div>
   );
 
   const S = ({ label, field, options, half=false, required=false }: any) => (
     <div className={half ? 'col-span-1' : 'col-span-2'}>
       <label className="text-[10px] font-black uppercase tracking-widest opacity-60 ml-1">
-        {label}{required && <span className="text-gray-900 ml-0.5">*</span>}
+        {label}{required && <span className="text-black ml-0.5">*</span>}
       </label>
       <div className="nm-inset px-3 py-2 rounded-xl mt-0.5 relative">
         <select value={(form as any)[field]} onChange={e => set(field, e.target.value)}
@@ -177,15 +177,15 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
   );
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm">
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
         className="nm-card w-full max-w-3xl max-h-[95vh] flex flex-col rounded-2xl overflow-hidden">
 
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
+        <div className="flex items-center justify-between p-4 border-b border-black/20 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="nm-inset p-2 rounded-xl text-gray-600"><Users size={20} /></div>
+            <div className="nm-inset p-2 rounded-xl text-black/80"><Users size={20} /></div>
             <div>
-              <h2 className="font-black text-gray-800">Advanced Patient Registration</h2>
+              <h2 className="font-black text-black">Advanced Patient Registration</h2>
               <p className="text-[10px] opacity-60 font-medium uppercase tracking-tighter">Following Specification Sheet SL-01 to 18</p>
             </div>
           </div>
@@ -231,8 +231,8 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 p-4 border-t border-gray-200 shrink-0 bg-gray-50/50">
-          <NmBtn onClick={onClose} className="text-gray-600">Discard Changes</NmBtn>
+        <div className="flex justify-end gap-3 p-4 border-t border-black/20 shrink-0 bg-white">
+          <NmBtn onClick={onClose} className="text-black/80">Discard Changes</NmBtn>
           <NmBtn onClick={handleSave} accent className="flex items-center gap-2 px-8">
             <Save size={16} /> Save & Generate UHID
           </NmBtn>
@@ -244,13 +244,13 @@ const PatientRegModal = ({ onClose, onSave }: RegModalProps) => {
 
 // ─── PATIENT DETAIL MODAL ───────────────────────────────────────────────────────
 const PatientDetailModal = ({ patient, onClose }: { patient: Patient; onClose: () => void }) => (
-  <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+  <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm">
     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
       className="nm-card w-full max-w-xl rounded-2xl overflow-hidden">
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-black/20">
         <div>
-          <h2 className="font-black text-gray-800">{patient.fullName}</h2>
-          <p className="text-[11px] font-bold text-gray-600">{patient.uhid}</p>
+          <h2 className="font-black text-black">{patient.fullName}</h2>
+          <p className="text-[11px] font-bold text-black/80">{patient.uhid}</p>
         </div>
         <button onClick={onClose} className="nm-button p-2 rounded-xl"><X size={18} /></button>
       </div>
@@ -298,7 +298,7 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
   return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
+        <h2 className="text-lg font-black flex items-center gap-2 text-black">
           <Users size={20} className="text-[var(--color-nm-accent)]" /> Patient Registry
           <span className="nm-inset px-2 py-0.5 rounded-full text-xs text-[var(--color-nm-accent)]">{patients.length}</span>
         </h2>
@@ -320,7 +320,7 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
       <div className="flex-1 overflow-auto">
         <table className="w-full text-xs">
           <thead className="sticky top-0 z-10" style={{ background: 'var(--color-nm-bg)' }}>
-            <tr className="text-left border-b border-gray-200 opacity-60 uppercase font-black tracking-widest text-[9px]">
+            <tr className="text-left border-b border-black/20 opacity-60 uppercase font-black tracking-widest text-[9px]">
               <th className="pb-2 pr-3">UHID</th>
               <th className="pb-2 pr-3">Patient Name</th>
               <th className="pb-2 pr-3">Gender</th>
@@ -330,7 +330,7 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
               <th className="pb-2">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-black/10">
             {filtered.length === 0 ? (
               <tr><td colSpan={7} className="py-8 text-center opacity-40 font-bold">No patients found</td></tr>
             ) : filtered.map((p: Patient) => (
@@ -344,11 +344,11 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
                 </td>
                 <td className="py-2 pr-3">
                   <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                    p.status === 'Active' ? 'bg-gray-200 text-gray-700' : 'bg-gray-100 text-gray-500'
+                    p.status === 'Active' ? 'bg-white font-bold' : 'bg-white text-black/40'
                   }`}>{p.status}</span>
                 </td>
                 <td className="py-2">
-                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 text-gray-600">
+                  <button onClick={() => setDetail(p)} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 text-black/80">
                     <Eye size={12} /> View
                   </button>
                 </td>
@@ -370,8 +370,8 @@ const PatientsModule = ({ user, patients, setPatients, showToast }: any) => {
 const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   if (user.role === 'PATIENT') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <Hospital size={20} className="text-gray-600" /> My Health Portal
+      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+        <Hospital size={20} className="text-black/80" /> My Health Portal
       </h2>
       <div className="grid grid-cols-2 gap-3 flex-1">
         {[
@@ -393,7 +393,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
               <p className="font-black">Dr. Sarah Wilson – Cardiology</p>
               <p className="text-xs opacity-60 font-medium">Today at 11:00 AM • Token #3</p>
             </div>
-            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-bold text-gray-900">Confirmed</span>
+            <span className="nm-inset px-3 py-1 rounded-full text-[11px] font-bold text-black">Confirmed</span>
           </div>
         </div>
       </div>
@@ -402,15 +402,15 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 
   if (user.role === 'DOCTOR') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <Stethoscope size={20} className="text-gray-600" /> Doctor's Station — {user.fullName}
+      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+        <Stethoscope size={20} className="text-black/80" /> Doctor's Station — {user.fullName}
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
-          { label:"Today's OPD",  value:'8',  icon:Calendar,  color:'text-gray-600' },
-          { label:'In Queue',     value:'3',  icon:Activity,  color:'text-gray-800' },
-          { label:'Lab Orders',   value:'5',  icon:Microscope,color:'text-gray-500'},
-          { label:'Prescriptions',value:'12', icon:Pill,      color:'text-gray-400'},
+          { label:"Today's OPD",  value:'8',  icon:Calendar,  color:'text-black/80' },
+          { label:'In Queue',     value:'3',  icon:Activity,  color:'text-black' },
+          { label:'Lab Orders',   value:'5',  icon:Microscope,color:'text-black/60'},
+          { label:'Prescriptions',value:'12', icon:Pill,      color:'text-black/40'},
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
@@ -423,9 +423,9 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         <p className="text-[10px] font-black uppercase opacity-60 mb-2">Today's Patient Queue</p>
         <div className="space-y-1.5">
           {['Rahul Sen – Token #01 – CHECKED IN','Harpreet Kaur – Token #02 – WAITING','Meenal Joshi – Token #03 – SCHEDULED'].map((q, i) => (
-            <div key={i} className={`nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs ${i===0 ? 'border-l-4 border-gray-400':''}`}>
+            <div key={i} className={`nm-flat p-2.5 rounded-xl flex items-center justify-between text-xs ${i===0 ? 'border-l-4 border-black/40':''}`}>
               <span className="font-bold">{q}</span>
-              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-900">Active</span>}
+              {i === 0 && <span className="nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold text-black">Active</span>}
             </div>
           ))}
         </div>
@@ -435,14 +435,14 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 
   if (user.role === 'LAB_TECHNICIAN') return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <FlaskConical size={20} className="text-gray-500" /> Lab Technician Dashboard
+      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+        <FlaskConical size={20} className="text-black/60" /> Lab Technician Dashboard
       </h2>
       <div className="grid grid-cols-3 gap-2">
         {[
-          { label:'Orders Today',    value:'14', icon:FileText,    color:'text-gray-600' },
-          { label:'Sample Pending',  value:'4',  icon:FlaskConical,color:'text-gray-400'},
-          { label:'Reports Approved',value:'6',  icon:CheckCircle, color:'text-gray-800'},
+          { label:'Orders Today',    value:'14', icon:FileText,    color:'text-black/80' },
+          { label:'Sample Pending',  value:'4',  icon:FlaskConical,color:'text-black/40'},
+          { label:'Reports Approved',value:'6',  icon:CheckCircle, color:'text-black'},
         ].map((k, i) => (
           <div key={i} className="nm-inset p-3 rounded-xl">
             <k.icon size={16} className={k.color} />
@@ -465,7 +465,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
                 <p className="opacity-60 font-medium">{o.test}</p>
               </div>
               <span className={`nm-inset px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                o.status==='SAMPLE_COLLECTED'?'text-gray-600':o.status==='PROCESSING'?'text-gray-400':'text-gray-500'
+                o.status==='SAMPLE_COLLECTED'?'text-black/80':o.status==='PROCESSING'?'text-black/40':'text-black/60'
               }`}>{o.status.replace('_',' ')}</span>
             </div>
           ))}
@@ -477,8 +477,8 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
   // SUPER_ADMIN / RECEPTIONIST default
   return (
     <div className="nm-flat p-4 rounded-2xl animate-fade-in h-full flex flex-col gap-3">
-      <h2 className="text-lg font-black flex items-center gap-2 text-gray-800">
-        <LayoutDashboard size={20} className="text-gray-600" /> Hospital Command Center
+      <h2 className="text-lg font-black flex items-center gap-2 text-black">
+        <LayoutDashboard size={20} className="text-black/80" /> Hospital Command Center
       </h2>
       <div className="grid grid-cols-4 gap-2">
         {[
@@ -501,7 +501,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
         <div className="nm-inset p-3 rounded-xl flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[10px] font-black uppercase opacity-60">Recent Registrations</p>
-            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold text-gray-600 flex items-center gap-1">
+            <button onClick={() => setActiveTab('patients')} className="nm-button px-2 py-1 rounded-lg text-[10px] font-bold text-black/80 flex items-center gap-1">
               View All <ArrowRight size={10} />
             </button>
           </div>
@@ -512,14 +512,14 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
                   <p className="font-black">{p.fullName}</p>
                   <p className="opacity-50 font-medium">{p.uhid}</p>
                 </div>
-                <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-bold text-[10px]">Active</span>
+                <span className="bg-white font-bold px-2 py-0.5 rounded-full font-bold text-[10px]">Active</span>
               </div>
             ))}
           </div>
         </div>
         <div className="nm-inset p-3 rounded-xl w-56 flex flex-col">
           <p className="text-[10px] font-black uppercase opacity-60 mb-2">Pharmacy Alerts</p>
-          <div className="nm-flat p-2.5 rounded-xl border-l-4 border-gray-400 animate-pulse">
+          <div className="nm-flat p-2.5 rounded-xl border-l-4 border-black/40 animate-pulse">
             <p className="text-[11px] font-black">⚠ Critical Low Stock</p>
             <p className="text-[10px] opacity-60 font-medium">Paracetamol 500mg</p>
             <p className="text-[10px] opacity-60 font-medium">Batch PM-109 • 8 units left</p>
@@ -535,7 +535,7 @@ const DashboardModule = ({ user, patients, setActiveTab }: any) => {
 };
 
 // ─── GENERIC PLACEHOLDER MODULE ────────────────────────────────────────────────
-const PlaceholderModule = ({ label, icon: Icon, color = 'text-gray-600' }: any) => (
+const PlaceholderModule = ({ label, icon: Icon, color = 'text-black/80' }: any) => (
   <div className="nm-flat h-full rounded-2xl flex flex-col items-center justify-center p-8 text-center animate-fade-in">
     <div className="nm-inset p-8 rounded-full mb-4">
       <Icon size={64} className={`opacity-30 ${color}`} />
@@ -549,10 +549,10 @@ const PlaceholderModule = ({ label, icon: Icon, color = 'text-gray-600' }: any) 
 
 // ─── LOGIN SCREEN ──────────────────────────────────────────────────────────────
 const ROLE_TABS: Array<{ key: string; label: string; icon: any; color: string }> = [
-  { key: 'SUPER_ADMIN',    label: 'Admin / Staff', icon: Settings,   color: 'text-gray-600' },
-  { key: 'DOCTOR',         label: 'Doctor',        icon: Stethoscope,color: 'text-gray-800'},
-  { key: 'LAB_TECHNICIAN', label: 'Technician',    icon: Microscope, color: 'text-gray-500'},
-  { key: 'PATIENT',        label: 'Patient',       icon: UserCheck,  color: 'text-gray-400'},
+  { key: 'SUPER_ADMIN',    label: 'Admin / Staff', icon: Settings,   color: 'text-black/80' },
+  { key: 'DOCTOR',         label: 'Doctor',        icon: Stethoscope,color: 'text-black'},
+  { key: 'LAB_TECHNICIAN', label: 'Technician',    icon: Microscope, color: 'text-black/60'},
+  { key: 'PATIENT',        label: 'Patient',       icon: UserCheck,  color: 'text-black/40'},
 ];
 
 const ROLE_HINTS: Record<string, string> = {
@@ -602,7 +602,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
           <div className="inline-flex nm-inset p-4 rounded-full mb-3">
             <Hospital size={44} className="text-[var(--color-nm-accent)]" />
           </div>
-          <h1 className="text-3xl font-black text-gray-800 tracking-tighter">MediCore</h1>
+          <h1 className="text-3xl font-black text-black tracking-tighter">MediCore</h1>
           <p className="text-[11px] font-bold uppercase opacity-50 tracking-widest">Enterprise Clinical Gateway</p>
         </div>
 
@@ -642,7 +642,7 @@ const LoginScreen = ({ onLogin }: LoginProps) => {
             </div>
           </div>
           {error && (
-            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-red-400 text-gray-900 text-xs font-bold flex items-center gap-2">
+            <div className="nm-inset px-3 py-2 rounded-xl border-l-4 border-black/40 text-black text-xs font-bold flex items-center gap-2">
               <AlertCircle size={14} /> {error}
             </div>
           )}
@@ -765,13 +765,13 @@ export default function App() {
     switch (activeTab) {
       case 'dashboard':    return <DashboardModule user={user} patients={patients} setActiveTab={setActiveTab} />;
       case 'patients':     return <PatientsModule  user={user} patients={patients} setPatients={setPatients} showToast={showToast} />;
-      case 'appointments': return <PlaceholderModule label="Appointments" icon={Calendar} color="text-gray-600" />;
-      case 'emr':          return <PlaceholderModule label="Clinical EMR" icon={Stethoscope} color="text-gray-600" />;
-      case 'lab':          return <PlaceholderModule label="Laboratory" icon={FlaskConical} color="text-gray-500" />;
-      case 'pharmacy':     return <PlaceholderModule label="Pharmacy" icon={Package} color="text-gray-600" />;
-      case 'billing':      return <PlaceholderModule label="Billing" icon={CreditCard} color="text-gray-400" />;
-      case 'crm':          return <PlaceholderModule label="CRM Leads" icon={TrendingUp} color="text-gray-600" />;
-      case 'admin':        return <PlaceholderModule label="Admin Control" icon={Settings} color="text-gray-500" />;
+      case 'appointments': return <PlaceholderModule label="Appointments" icon={Calendar} color="text-black/80" />;
+      case 'emr':          return <PlaceholderModule label="Clinical EMR" icon={Stethoscope} color="text-black/80" />;
+      case 'lab':          return <PlaceholderModule label="Laboratory" icon={FlaskConical} color="text-black/60" />;
+      case 'pharmacy':     return <PlaceholderModule label="Pharmacy" icon={Package} color="text-black/80" />;
+      case 'billing':      return <PlaceholderModule label="Billing" icon={CreditCard} color="text-black/40" />;
+      case 'crm':          return <PlaceholderModule label="CRM Leads" icon={TrendingUp} color="text-black/80" />;
+      case 'admin':        return <PlaceholderModule label="Admin Control" icon={Settings} color="text-black/60" />;
       default:             return <DashboardModule user={user} patients={patients} setActiveTab={setActiveTab} />;
     }
   };
@@ -781,11 +781,11 @@ export default function App() {
       {/* ── SIDEBAR ── */}
       <nav className="nm-flat w-[66px] lg:w-[175px] rounded-2xl flex flex-col p-2 shrink-0 transition-all">
         <div className="flex items-center gap-2 px-2 py-3 mb-3">
-          <div className="nm-inset p-2 rounded-xl text-gray-600 shrink-0">
+          <div className="nm-inset p-2 rounded-xl text-black/80 shrink-0">
             <Hospital size={22} />
           </div>
           <div className="hidden lg:block overflow-hidden">
-            <p className="font-black text-lg text-gray-800 tracking-tighter leading-none">MediCore</p>
+            <p className="font-black text-lg text-black tracking-tighter leading-none">MediCore</p>
             <p className="text-[9px] font-bold opacity-40 uppercase leading-none">HMS v2</p>
           </div>
         </div>
@@ -811,7 +811,7 @@ export default function App() {
             {user.role.replace('_',' ')}
           </p>
         </div>
-        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-gray-900 font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
+        <button onClick={handleLogout} className="mt-1 p-2.5 rounded-xl nm-button text-black font-black flex items-center gap-2.5 hover:opacity-90 transition-all">
           <LogOut size={18} className="shrink-0" />
           <span className="text-[11px] hidden lg:block">Sign Out</span>
         </button>
@@ -822,12 +822,12 @@ export default function App() {
         {/* Header bar */}
         <header className="nm-flat h-[54px] rounded-2xl flex items-center justify-between px-4 shrink-0 gap-3">
           <div className="flex items-center gap-3 overflow-hidden">
-            <h2 className="font-black text-base text-gray-800 uppercase tracking-widest truncate">
+            <h2 className="font-black text-base text-black uppercase tracking-widest truncate">
               {navItems.find(m => m.id === activeTab)?.label || 'Dashboard'}
             </h2>
             <div className="hidden md:flex items-center gap-1.5 nm-inset px-3 py-1 rounded-full text-[11px] font-bold shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-gray-500">System Online</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-black/40 animate-pulse"></span>
+              <span className="text-black/60">System Online</span>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -836,7 +836,7 @@ export default function App() {
               <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-gray-800 rounded-full border-2 border-[#e0e5ec]"></span>
             </button>
             <div className="flex items-center gap-2 nm-inset px-3 py-1.5 rounded-full">
-              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-black text-gray-600">
+              <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] font-black text-black/80">
                 {user.fullName.charAt(0)}
               </div>
               <div className="hidden sm:block">

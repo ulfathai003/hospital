@@ -2,16 +2,16 @@
 @import "tailwindcss";
 
 :root {
-  --color-nm-bg: #f0f2f5;
+  --color-nm-bg: #ffffff;
   --color-nm-shadow-light: #ffffff;
-  --color-nm-shadow-dark: #d1d9e6;
-  --color-nm-accent: #2d3748;
-  --color-nm-accent-light: #4a5568;
+  --color-nm-shadow-dark: #f0f0f0;
+  --color-nm-accent: #000000;
+  --color-nm-accent-light: #333333;
 }
 
 body {
   background-color: var(--color-nm-bg);
-  color: #434c5e;
+  color: #000000;
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   overflow-x: hidden;
