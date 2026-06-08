@@ -1,234 +1,156 @@
+// ─── iMAT.H1 — Master Type Definitions ─────────────────────────────────────
+// Source of truth: iMAT_H1_System_Architecture.md
 
-export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'DOCTOR' | 'RECEPTIONIST' | 'NURSE' | 'PHARMACIST' | 'LAB_TECHNICIAN' | 'CRM_EXECUTIVE' | 'BILLING_EXECUTIVE';
+// ── Enums & Unions ──────────────────────────────────────────────────────────
+export type RecordStatus = 'Active' | 'Inactive' | 'Draft' | 'Archived';
+export type RoleType =
+  | 'SUPER_ADMIN'
+  | 'COMPANY_ADMIN'
+  | 'FACILITY_ADMIN'
+  | 'BRANCH_MANAGER'
+  | 'STAFF'
+  | 'RECEPTION'
+  | 'DOCTOR'
+  | 'PATIENT';
 
-export type PatientStatus = 'Active' | 'InActive' | 'Hold';
-export type AppointmentStatus = 'SCHEDULED' | 'CHECKED_IN' | 'IN_CONSULTATION' | 'COMPLETED' | 'CANCELLED';
-export type QueueStatus = 'PENDING' | 'ACTIVE' | 'DONE';
-export type LeadStage = 'NEW' | 'CONTACTED' | 'COUNSELLING' | 'QUALIFIED' | 'CONVERTED' | 'LOST' | 'ADMITTED';
-export type NotificationType = 'APPOINTMENT_BOOKED' | 'ADMISSION_APPROVED' | 'CRITICAL_LAB_RESULT' | 'LOW_PHARMACY_STOCK' | 'PENDING_TASK' | 'SYSTEM';
+export type Gender = 'Male' | 'Female' | 'Other';
+export type DobCalendar = 'Gregorian' | 'Hijri';
+export type BloodGroup =
+  | 'AB Positive' | 'AB Negative'
+  | 'A Positive'  | 'A Negative'
+  | 'B Positive'  | 'B Negative'
+  | 'O Positive'  | 'O Negative';
+export type RegistrationType = 'Regular' | 'Temporary' | 'Unknown';
+export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'EXPORT';
 
-export interface User {
+// ── Hierarchy Master ─────────────────────────────────────────────────────────
+export interface Company {
+  id: string;
+  companyCode: string;   // Auto: C0001
+  companyName: string;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Facility {
+  id: string;
+  companyId: string;
+  facilityCode: string;  // Auto: F0001
+  facilityName: string;
+  countryId: string;
+  stateId: string;
+  districtId: string;
+  city: string;
+  address: string;
+  email: string;
+  phone: string;
+  gstNo: string;
+  branchType: string;
+  status: RecordStatus;
+  startDate: string;
+  endDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Branch {
+  id: string;
+  facilityId: string;
+  branchCode: string;    // Auto: B0001
+  branchName: string;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ── Master Data ──────────────────────────────────────────────────────────────
+export interface Country    { id: string; name: string; code: string; }
+export interface State      { id: string; countryId: string; name: string; }
+export interface District   { id: string; stateId: string; name: string; }
+export interface Religion   { id: string; name: string; status: RecordStatus; }
+export interface Nationality { id: string; name: string; status: RecordStatus; }
+export interface IdType     { id: string; name: string; status: RecordStatus; }
+
+// ── User / Staff ─────────────────────────────────────────────────────────────
+export interface AppUser {
+  id: string;
+  companyId?: string;
+  facilityId?: string;
+  branchId?: string;
+  roleType: RoleType;
+  fullName: string;
+  email: string;
+  password: string;
+  uhid?: string;          // Only for PATIENT
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserSession {
   id: string;
   email: string;
   fullName: string;
-  role: UserRole;
-  avatar?: string;
-  specialization?: string;
+  roleType: RoleType;
+  companyId?: string;
+  facilityId?: string;
+  branchId?: string;
+  uhid?: string;
 }
 
+// ── Patient ──────────────────────────────────────────────────────────────────
 export interface Patient {
   id: string;
-  uhid: string; // YYYY-NNNNNN
-  status: PatientStatus;
-  registrationType: 'Regular' | 'Temporary' | 'Unknown';
-  fullName: string;
-  gender: 'Male' | 'Female' | 'Other';
-  dobCalendar: 'Gregorian' | 'Hijri';
-  dob: string; // DD-MMM-YYYY
-  nationality: string;
-  mobileNo: string;
-  emailId?: string;
-  religion?: string;
-  idType?: 'Aadhar' | 'Passport' | 'PAN Card' | 'Driving License';
-  idNo?: string;
-  bloodGroup?: 'AB Positive' | 'AB Negative' | 'A Positive' | 'A Negative' | 'B Positive' | 'B Negative' | 'O Positive' | 'O Negative';
-  district: string;
-  state: string;
-  country: string;
-  address?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Appointment {
-  id: string;
-  patientId: string;
-  patientName: string;
-  patientUhid: string;
-  doctorId: string;
-  doctorName: string;
-  appointmentDate: string;
-  timeSlot: string;
-  status: AppointmentStatus;
-  tokenNumber: number;
-  queueStatus: QueueStatus;
-  consultationFee: number;
-  createdAt: string;
-}
-
-export interface ClinicalRecord {
-  id: string;
-  patientId: string;
-  doctorId: string;
-  doctorName: string;
-  appointmentId?: string;
-  recordDate: string;
-  symptoms: string;
-  vitalsBp?: string;
-  vitalsPulse?: number;
-  vitalsTempF?: number;
-  vitalsSpo2?: number;
-  vitalsWeightKg?: number;
-  examinationFindings?: string;
-  diagnoses: string[];
-  treatmentPlan?: string;
-  followupRecommendation?: string;
-  followupDate?: string;
-  prescriptions: PrescriptionItem[];
-  createdAt: string;
-}
-
-export interface PrescriptionItem {
-  medicineId?: string;
-  medicineName: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
-  quantity?: number;
-  instructions?: string;
-}
-
-export interface Admission {
-  id: string;
-  patientId: string;
-  patientName: string;
-  patientUhid: string;
-  bedId: string;
-  bedNumber: string;
-  wardName: string;
-  referringDoctorId: string;
-  referringDoctorName: string;
-  admissionDate: string;
-  dischargeDate?: string;
-  status: 'ADMITTED' | 'DISCHARGED';
-  reasonForAdmission: string;
-  provisionalDiagnosis: string;
-  dischargeSummary?: string;
-  createdAt: string;
-}
-
-export interface InvoiceItem {
-  id: string;
-  itemType: 'CONSULTATION' | 'PHARMACY' | 'LABORATORY' | 'WARD_CHARGE' | 'PROCEDURAL' | 'OTHER';
-  itemName: string;
-  unitPrice: number;
-  quantity: number;
-  totalPrice: number;
-}
-
-export interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  patientId: string;
-  patientName: string;
-  patientUhid: string;
-  admissionId?: string;
-  subtotal: number;
-  tax: number;
-  discount: number;
-  total: number;
-  paidAmount: number;
-  outstandingBalance: number;
-  status: 'UNPAID' | 'PARTIALLY_PAID' | 'PAID';
-  billingDate: string;
-  items: InvoiceItem[];
-  createdAt: string;
-}
-
-export interface Payment {
-  id: string;
-  invoiceId: string;
-  invoiceNumber: string;
-  amount: number;
-  paymentMethod: string;
-  paymentStatus: string;
-  transactionReference?: string;
-  insuranceProvider?: string;
-  insuranceClaimNumber?: string;
-  paymentDate: string;
-  receivedBy: string;
-}
-
-export interface MedicineInventory {
-  id: string;
-  medicineName: string;
-  batchNumber: string;
-  expiryDate: string;
-  quantityInStock: number;
-  reorderLevel: number;
-  unitPrice: number;
-}
-
-export interface LabTestOrder {
-  id: string;
-  patientId: string;
-  patientName: string;
-  patientUhid: string;
-  doctorId: string;
-  doctorName: string;
-  orderDate: string;
-  status: 'ORDERED' | 'SAMPLE_COLLECTED' | 'PROCESSING' | 'COMPLETED' | 'REPORT_APPROVED';
-  billingStatus: 'PENDING' | 'PAID';
-  items: LabTestItem[];
-  resultValues?: any;
-  notes?: string;
-}
-
-export interface LabTestItem {
-  id: string;
-  labTestId: string;
-  testCode: string;
-  testName: string;
-  sampleType: string;
-  resultValue?: string;
-  unit?: string;
-  isAbnormal: boolean;
-  technicianNotes?: string;
-  resultEnteredAt?: string;
-  resultEnteredBy?: string;
-  resultEnteredByName?: string;
-  approvedAt?: string;
-  approvedBy?: string;
-  approvedByName?: string;
-}
-
-export interface CrmLead {
-  id: string;
-  source: string;
-  fullName: string;
-  email: string;
+  facilityId: string;
+  branchId: string;
+  patientCode: string;   // Auto: UHID-YYYY-0001
+  firstName: string;
+  lastName: string;
+  fullName: string;      // Computed: firstName + lastName
+  dob: string;
+  dobCalendar: DobCalendar;
+  gender: Gender;
   mobile: string;
-  stage: LeadStage;
-  campaignName?: string;
-  preferredDepartment?: string;
+  email?: string;
+  countryId: string;
+  stateId: string;
+  districtId: string;
+  religionId?: string;
+  nationalityId?: string;
+  idTypeId?: string;
+  idNumber?: string;
+  bloodGroup?: BloodGroup;
+  registrationType: RegistrationType;
+  status: RecordStatus;
+  address?: string;
   notes?: string;
-  assignedTo?: string;
-  assignedToName?: string;
-  conversionDate?: string;
   createdAt: string;
   updatedAt: string;
 }
 
+// ── Fiscal Year ──────────────────────────────────────────────────────────────
+export interface FiscalYear {
+  id: string;
+  yearLabel: string;   // e.g. "2026-2027"
+  startDate: string;
+  endDate: string;
+  isCurrent: boolean;
+}
+
+// ── Audit Log ────────────────────────────────────────────────────────────────
 export interface AuditLog {
   id: string;
+  userId: string;
   userEmail: string;
-  userRole: UserRole;
-  ipAddress: string;
-  module: string;
-  action: string;
-  itemId: string;
-  details: string;
+  tableName: string;
+  recordId: string;
+  action: AuditAction;
+  oldValue?: any;
+  newValue?: any;
   createdAt: string;
 }
 
-export interface AppNotification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  roleRecipient?: string;
-  isRead: boolean;
-  smsSent: boolean;
-  emailSent: boolean;
-  createdAt: string;
-}
+// ── UI Helpers ────────────────────────────────────────────────────────────────
+export interface SelectOption { value: string; label: string; }
+export interface TreeNode<T> { data: T; children?: TreeNode<any>[]; }
