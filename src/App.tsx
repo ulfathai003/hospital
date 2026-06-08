@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { LoginScreen }    from './components/LoginScreen';
 import { MasterModule }   from './components/MasterModule';
 import { PatientsModule } from './components/PatientsModule';
+import { ClinicalModule } from './components/ClinicalModule';
 import { Toast }          from './components/ui';
 
 import {
@@ -205,8 +206,8 @@ export default function App() {
       case 'dashboard':    return <DashboardModule user={user} patients={patients} setTab={setTab} />;
       case 'patients':     return <PatientsModule patients={patients} setPatients={setPatients} user={user} showToast={showToast} />;
       case 'master':       return <MasterModule db={db} setDb={setDb} showToast={showToast} />;
+      case 'emr':          return <ClinicalModule user={user} showToast={showToast} />;
       case 'appointments': return <Placeholder label="Appointments" icon={Calendar} />;
-      case 'emr':          return <Placeholder label="Clinical EMR" icon={Stethoscope} />;
       case 'lab':          return <Placeholder label="Laboratory" icon={FlaskConical} />;
       case 'pharmacy':     return <Placeholder label="Pharmacy" icon={Package} />;
       case 'billing':      return <Placeholder label="Billing" icon={CreditCard} />;
