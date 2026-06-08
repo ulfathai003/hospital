@@ -13,14 +13,12 @@ import { ClinicalModule } from './components/ClinicalModule';
 import { Toast }          from './components/ui';
 
 import {
-  COMPANIES, FACILITIES, BRANCHES, INITIAL_PATIENTS
+  INITIAL_DB
 } from './data/seed';
-import type { UserSession, Patient, Company, Facility, Branch } from './types';
+import type { UserSession, Patient, Company, Facility, Branch, DatabaseState } from './types';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type Tab = 'dashboard' | 'patients' | 'master' | 'appointments' | 'emr' | 'lab' | 'pharmacy' | 'billing' | 'crm' | 'admin';
-
-interface DB { companies: Company[]; facilities: Facility[]; branches: Branch[]; }
 
 // ── Nav config by role ────────────────────────────────────────────────────────
 const NAV: Record<string, { id: Tab; icon: any; label: string }[]> = {
@@ -170,55 +168,54 @@ const Loading = () => (
 
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
-  const [user,     setUser]     = useState<UserSession | null>(null);
-  const [tab,      setTab]      = useState<Tab>('dashboard');
-  const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
-  const [db,       setDb]       = useState<DB>({ companies: COMPANIES, facilities: FACILITIES, branches: BRANCHES });
-  const [toast,    setToast]    = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
-  const [booting,  setBooting]  = useState(true);
+  const [session, setSession] = useState<UserSession | null>(null);
+  const [db, setDb] = useState<DatabaseState>(INITIAL_DB);
+  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [toasts, setToasts] = useState<{ id: string; msg: string; type: 'success' | 'error' }[]>([]);
 
-  useEffect(() => { setTimeout(() => setBooting(false), 900); }, []);
-
-  const showToast = (msg: string, type: 'success' | 'error') => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 4000);
+  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
+    const id = Math.random().toString(36).slice(2, 9);
+    setToasts(prev => [...prev, { id, msg, type }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
   };
 
   const handleLogin = (s: UserSession) => {
-    setUser(s); setTab('dashboard');
+    setSession(s);
+    setActiveTab('dashboard');
     showToast(`Welcome, ${s.fullName}!`, 'success');
   };
 
-  const handleLogout = () => { setUser(null); setTab('dashboard'); };
-
-  if (booting) return <Loading />;
-  if (!user) return (
+  if (!session) return (
     <>
       <LoginScreen onLogin={handleLogin} />
-      <AnimatePresence>{toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}</AnimatePresence>
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3">
+        {toasts.map(t => <Toast key={t.id} message={t.msg} type={t.type} />)}
+      </div>
     </>
   );
 
-  const navItems = NAV[user.roleType] || NAV.STAFF;
+  const handleLogout = () => { setSession(null); setActiveTab('dashboard'); };
+
+  const navItems = NAV[session.roleType] || NAV.STAFF;
 
   const renderModule = () => {
-    switch (tab) {
-      case 'dashboard':    return <DashboardModule user={user} patients={patients} setTab={setTab} />;
-      case 'patients':     return <PatientsModule patients={patients} setPatients={setPatients} user={user} showToast={showToast} />;
-      case 'master':       return <MasterModule db={db} setDb={setDb} showToast={showToast} />;
-      case 'emr':          return <ClinicalModule user={user} showToast={showToast} />;
+    switch (activeTab) {
+      case 'dashboard':    return <DashboardModule user={session} patients={db.patients} setTab={setActiveTab} />;
+      case 'patients':     return <PatientsModule db={db} setDb={setDb} user={session} showToast={showToast} />;
+      case 'master':       return <MasterModule db={db} setDb={setDb} user={session} showToast={showToast} />;
+      case 'emr':          return <ClinicalModule user={session} showToast={showToast} />;
       case 'appointments': return <Placeholder label="Appointments" icon={Calendar} />;
       case 'lab':          return <Placeholder label="Laboratory" icon={FlaskConical} />;
       case 'pharmacy':     return <Placeholder label="Pharmacy" icon={Package} />;
       case 'billing':      return <Placeholder label="Billing" icon={CreditCard} />;
       case 'crm':          return <Placeholder label="CRM Leads" icon={TrendingUp} />;
       case 'admin':        return <Placeholder label="Admin Control" icon={Settings} />;
-      default:             return <DashboardModule user={user} patients={patients} setTab={setTab} />;
+      default:             return <DashboardModule user={session} patients={db.patients} setTab={setActiveTab} />;
     }
   };
 
   return (
-    <div className="h-screen flex p-2 gap-2 overflow-hidden bg-[var(--color-nm-bg)]">
+    <div className="h-screen flex p-2 gap-2 overflow-hidden bg-(--color-nm-bg)">
       {/* Sidebar */}
       <nav className="nm-flat w-[66px] lg:w-[175px] rounded-2xl flex flex-col p-2 shrink-0">
         <div className="flex items-center gap-2 px-2 py-3 mb-3">
@@ -231,9 +228,9 @@ export default function App() {
 
         <div className="flex-1 space-y-0.5 overflow-y-auto">
           {navItems.map(item => (
-            <button key={item.id} onClick={() => setTab(item.id)}
+            <button key={item.id} onClick={() => setActiveTab(item.id)}
               className={`w-full p-2.5 rounded-xl flex items-center gap-2.5 transition-all text-left font-normal text-xs ${
-                tab === item.id
+                activeTab === item.id
                   ? 'nm-inset text-[#4361ee]'
                   : 'opacity-50 hover:opacity-90 hover:text-[#8338ec]'
               }`}>
@@ -244,8 +241,8 @@ export default function App() {
         </div>
 
         <div className="mt-2 nm-inset p-2 rounded-xl hidden lg:block mb-1">
-          <p className="text-[10px] font-normal truncate">{user.fullName}</p>
-          <p className="text-[9px] text-[#4361ee] opacity-70">{user.roleType.replace(/_/g,' ')}</p>
+          <p className="text-[10px] font-normal truncate">{session.fullName}</p>
+          <p className="text-[9px] text-[#4361ee] opacity-70">{session.roleType.replace(/_/g,' ')}</p>
         </div>
         <button onClick={handleLogout}
           className="p-2.5 rounded-xl nm-button text-[#4361ee] font-normal flex items-center gap-2.5 hover:opacity-90 transition-all text-xs">
@@ -260,7 +257,7 @@ export default function App() {
         <header className="nm-flat h-[54px] rounded-2xl flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-3">
             <h2 className="font-normal text-sm text-black uppercase tracking-widest">
-              {navItems.find(m => m.id === tab)?.label || 'Dashboard'}
+              {navItems.find(m => m.id === activeTab)?.label || 'Dashboard'}
             </h2>
             <div className="hidden md:flex items-center gap-1.5 nm-inset px-3 py-1 rounded-full text-[11px]">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -274,11 +271,11 @@ export default function App() {
             </button>
             <div className="nm-inset px-3 py-1.5 rounded-full flex items-center gap-2">
               <div className="w-6 h-6 rounded-full nm-flat flex items-center justify-center text-[10px] text-[#4361ee]">
-                {user.fullName.charAt(0)}
+                {session?.fullName?.charAt(0) || 'U'}
               </div>
               <div className="hidden sm:block">
-                <p className="text-[10px] font-normal leading-none">{user.fullName.split(' ')[0]}</p>
-                <p className="text-[8px] text-[#4361ee] leading-none">{user.roleType.replace(/_/g,' ')}</p>
+                <p className="text-[10px] font-normal leading-none">{session?.fullName?.split(' ')[0]}</p>
+                <p className="text-[8px] text-[#4361ee] leading-none">{session?.roleType?.replace(/_/g,' ')}</p>
               </div>
             </div>
           </div>
@@ -287,7 +284,7 @@ export default function App() {
         {/* Content */}
         <section className="flex-1 min-h-0 overflow-hidden">
           <AnimatePresence mode="wait">
-            <motion.div key={tab}
+            <motion.div key={activeTab}
               initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.12 }}
               className="h-full">
@@ -297,9 +294,9 @@ export default function App() {
         </section>
       </main>
 
-      <AnimatePresence>
-        {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
-      </AnimatePresence>
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3">
+        {toasts.map(t => <Toast key={t.id} message={t.msg} type={t.type} />)}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Hospital, Eye, EyeOff, AlertCircle, ChevronDown } from 'lucide-react';
+import { Hospital, Eye, EyeOff, AlertCircle, ChevronDown, UserCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { USERS, COMPANIES, FACILITIES, BRANCHES } from '../data/seed';
 import type { UserSession } from '../types';
@@ -53,8 +53,22 @@ export const LoginScreen: React.FC<Props> = ({ onLogin }) => {
   const demoStaff   = USERS.filter(u => u.roleType !== 'PATIENT');
   const demoPatient = USERS.filter(u => u.roleType === 'PATIENT');
 
+  const loginAsSuperAdmin = () => {
+    const admin = USERS.find(u => u.roleType === 'SUPER_ADMIN');
+    if (admin) {
+      setEmail(admin.email);
+      setPassword(admin.password);
+      setUserType('STAFF');
+      setCompanyId(''); // Super admin doesn't need these filtered
+      setFacilityId('');
+      setBranchId('');
+      // We trigger the actual login from here
+      onLogin({ id: admin.id, email: admin.email, fullName: admin.fullName, roleType: admin.roleType });
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-nm-bg)] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-nm-bg) p-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="nm-card w-full max-w-sm rounded-3xl p-7">
 
@@ -65,6 +79,18 @@ export const LoginScreen: React.FC<Props> = ({ onLogin }) => {
           </div>
           <h1 className="text-2xl font-normal text-black tracking-tight">iMAT.H1</h1>
           <p className="text-[10px] uppercase tracking-widest opacity-40 mt-0.5">Enterprise Clinical Gateway</p>
+        </div>
+
+        {/* Super Admin Shortcut */}
+        <button onClick={loginAsSuperAdmin}
+          className="w-full mb-4 nm-flat py-3 rounded-xl border border-[#4361ee]/20 text-[#4361ee] text-xs font-normal flex items-center justify-center gap-2 hover:-translate-y-px transition-all active:nm-inset">
+          <UserCheck size={14} />
+          Sign Internally as Super Admin
+        </button>
+
+        <div className="relative flex items-center justify-center mb-5">
+          <div className="absolute w-full h-px bg-black/5"></div>
+          <span className="relative px-3 bg-(--color-nm-bg) text-[9px] uppercase tracking-widest opacity-30">or choose category</span>
         </div>
 
         {/* User Type Tabs */}

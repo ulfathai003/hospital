@@ -5,7 +5,7 @@ import {
   COUNTRIES, STATES, DISTRICTS, RELIGIONS, NATIONALITIES, ID_TYPES,
   nextPatientCode, genId, now
 } from '../data/seed';
-import type { Patient, RecordStatus, BloodGroup, Gender, RegistrationType, DobCalendar, UserSession } from '../types';
+import type { Patient, RecordStatus, BloodGroup, Gender, RegistrationType, DobCalendar, UserSession, DatabaseState } from '../types';
 import { Btn, Modal, Field, Input, Select, SearchableSelect, StatusBadge, PageHeader, Table, TR, TD, Empty } from './ui';
 
 const BLOOD_GROUPS: BloodGroup[] = ['AB Positive','AB Negative','A Positive','A Negative','B Positive','B Negative','O Positive','O Negative'];
@@ -16,9 +16,9 @@ const STATUSES: { value: RecordStatus; label: string }[] = [
 
 // ── Patient Form ──────────────────────────────────────────────────────────────
 const PatientForm: React.FC<{
-  item?: Patient; patients: Patient[]; user: UserSession;
+  item?: Patient; db: DatabaseState; user: UserSession;
   onSave: (p: Patient) => void; onClose: () => void;
-}> = ({ item, patients, user, onSave, onClose }) => {
+}> = ({ item, db, user, onSave, onClose }) => {
   const blank: Partial<Patient> = {
     facilityId: user.facilityId || '', branchId: user.branchId || '',
     status: 'Active', registrationType: 'Regular', dobCalendar: 'Gregorian', gender: 'Male',
@@ -44,7 +44,7 @@ const PatientForm: React.FC<{
     const fullName = `${form.firstName} ${form.lastName}`.trim();
     onSave({
       id: item?.id || genId(),
-      patientCode: item?.patientCode || nextPatientCode(patients),
+      patientCode: item?.patientCode || nextPatientCode(db.patients),
       facilityId: form.facilityId || '', branchId: form.branchId || '',
       firstName: form.firstName!, lastName: form.lastName!, fullName,
       dob: form.dob!, dobCalendar: form.dobCalendar as DobCalendar || 'Gregorian',
@@ -132,15 +132,15 @@ const PatientForm: React.FC<{
         </div>
         <Field label="Nationality" half>
           <SearchableSelect value={form.nationalityId || ''} onChange={v => set('nationalityId', v)}
-            options={NATIONALITIES.map(n => ({ value: n.id, label: n.name }))} />
+            options={db.nationalities.map(n => ({ value: n.id, label: n.name }))} />
         </Field>
         <Field label="Religion" half>
           <SearchableSelect value={form.religionId || ''} onChange={v => set('religionId', v)}
-            options={RELIGIONS.map(r => ({ value: r.id, label: r.name }))} />
+            options={db.religions.map(r => ({ value: r.id, label: r.name }))} />
         </Field>
         <Field label="ID Type" half>
           <SearchableSelect value={form.idTypeId || ''} onChange={v => set('idTypeId', v)}
-            options={ID_TYPES.map(t => ({ value: t.id, label: t.name }))} />
+            options={db.idTypes.map(t => ({ value: t.id, label: t.name }))} />
         </Field>
         <Field label="ID Number" half>
           <Input value={form.idNumber || ''} onChange={e => set('idNumber', e.target.value)} />
@@ -164,13 +164,13 @@ const PatientForm: React.FC<{
 };
 
 // ── Patient Detail ────────────────────────────────────────────────────────────
-const PatientDetail: React.FC<{ patient: Patient; onClose: () => void }> = ({ patient, onClose }) => {
+const PatientDetail: React.FC<{ patient: Patient; db: DatabaseState; onClose: () => void }> = ({ patient, db, onClose }) => {
   const country    = COUNTRIES.find(c => c.id === patient.countryId);
   const state      = STATES.find(s => s.id === patient.stateId);
   const district   = DISTRICTS.find(d => d.id === patient.districtId);
-  const religion   = RELIGIONS.find(r => r.id === patient.religionId);
-  const nationality = NATIONALITIES.find(n => n.id === patient.nationalityId);
-  const idType     = ID_TYPES.find(t => t.id === patient.idTypeId);
+  const religion   = db.religions.find(r => r.id === patient.religionId);
+  const nationality = db.nationalities.find(n => n.id === patient.nationalityId);
+  const idType     = db.idTypes.find(t => t.id === patient.idTypeId);
 
   const rows = [
     ['UHID', patient.patientCode], ['DOB', patient.dob], ['Gender', patient.gender],
@@ -206,9 +206,9 @@ const PatientDetail: React.FC<{ patient: Patient; onClose: () => void }> = ({ pa
 
 // ── Patients Module ───────────────────────────────────────────────────────────
 export const PatientsModule: React.FC<{
-  patients: Patient[]; setPatients: (p: Patient[]) => void;
+  db: DatabaseState; setDb: React.Dispatch<React.SetStateAction<DatabaseState>>;
   user: UserSession; showToast: (m: string, t: 'success' | 'error') => void;
-}> = ({ patients, setPatients, user, showToast }) => {
+}> = ({ db, setDb, user, showToast }) => {
   const [search, setSearch]     = useState('');
   const [showReg, setShowReg]   = useState(false);
   const [editing, setEditing]   = useState<Patient | null>(null);
@@ -216,22 +216,23 @@ export const PatientsModule: React.FC<{
 
   const canRegister = ['SUPER_ADMIN','FACILITY_ADMIN','BRANCH_MANAGER','RECEPTION'].includes(user.roleType);
 
-  const filtered = patients.filter(p =>
+  const filtered = db.patients.filter(p =>
     p.fullName.toLowerCase().includes(search.toLowerCase()) ||
     p.patientCode.toLowerCase().includes(search.toLowerCase()) ||
     p.mobile.includes(search)
   );
 
   const savePatient = (p: Patient) => {
-    const exists = patients.find(x => x.id === p.id);
-    setPatients(exists ? patients.map(x => x.id === p.id ? p : x) : [...patients, p]);
+    const exists = db.patients.find(x => x.id === p.id);
+    const newList = exists ? db.patients.map(x => x.id === p.id ? p : x) : [...db.patients, p];
+    setDb(prev => ({ ...prev, patients: newList }));
     showToast(exists ? 'Patient updated successfully' : `Patient registered — ${p.patientCode}`, 'success');
     setShowReg(false); setEditing(null);
   };
 
   return (
     <div className="nm-flat p-4 rounded-2xl h-full flex flex-col gap-3 animate-fade-in">
-      <PageHeader title="Patient Registry" subtitle={`${patients.length} total records`}>
+      <PageHeader title="Patient Registry" subtitle={`${db.patients.length} total records`}>
         {canRegister && <Btn accent sm onClick={() => setShowReg(true)}><Plus size={13} /> New Registration</Btn>}
       </PageHeader>
 
@@ -271,10 +272,10 @@ export const PatientsModule: React.FC<{
       <AnimatePresence>
         {(showReg || editing) && (
           <Modal title={editing ? 'Edit Patient' : 'New Patient Registration'} onClose={() => { setShowReg(false); setEditing(null); }} wide>
-            <PatientForm item={editing || undefined} patients={patients} user={user} onSave={savePatient} onClose={() => { setShowReg(false); setEditing(null); }} />
+            <PatientForm item={editing || undefined} db={db} user={user} onSave={savePatient} onClose={() => { setShowReg(false); setEditing(null); }} />
           </Modal>
         )}
-        {detail && <PatientDetail patient={detail} onClose={() => setDetail(null)} />}
+        {detail && <PatientDetail patient={detail} db={db} onClose={() => setDetail(null)} />}
       </AnimatePresence>
     </div>
   );

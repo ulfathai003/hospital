@@ -1,20 +1,56 @@
 import React, { useState } from 'react';
-import { Building2, Plus, Pencil, ChevronRight, ChevronDown } from 'lucide-react';
+import { Building2, Plus, Pencil, ChevronRight, ChevronDown, List, Globe, Hash } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
-import { COMPANIES, FACILITIES, BRANCHES, nextCompanyCode, nextFacilityCode, nextBranchCode, genId, now } from '../data/seed';
-import type { Company, Facility, Branch, RecordStatus } from '../types';
+import { COMPANIES, FACILITIES, BRANCHES, nextCompanyCode, nextFacilityCode, genId, now } from '../data/seed';
+import type { Company, Facility, Branch, RecordStatus, DatabaseState, UserSession, MasterRecord } from '../types';
 import { Btn, Modal, Field, Input, Select, SearchableSelect, StatusBadge, PageHeader, Table, TR, TD, Empty } from './ui';
 
-type DB = { companies: Company[]; facilities: Facility[]; branches: Branch[] };
-interface Props { db: DB; setDb: (d: DB) => void; showToast: (m: string, t: 'success' | 'error') => void; }
+interface Props { db: DatabaseState; setDb: (d: DatabaseState) => void; user: UserSession; showToast: (m: string, t: 'success' | 'error') => void; }
 
 const STATUSES: { value: RecordStatus; label: string }[] = [
   { value: 'Active', label: 'Active' }, { value: 'Inactive', label: 'Inactive' },
   { value: 'Draft', label: 'Draft' },   { value: 'Archived', label: 'Archived' },
 ];
 
+// ── MASTER RECORD FORM (Generic for Religion, Nationality, ID Types) ─────────────
+const MasterRecordForm: React.FC<{ item?: MasterRecord; onSave: (r: MasterRecord) => void; onClose: () => void; label: string }> = ({ item, onSave, onClose, label }) => {
+  const [form, setForm] = useState<Partial<MasterRecord>>(item || { status: 'Active' });
+  const [err, setErr] = useState<Record<string, string>>({});
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!form.name?.trim()) e.name = 'Name is required';
+    return e;
+  };
+  const save = () => {
+    const e = validate(); if (Object.keys(e).length) { setErr(e); return; }
+    onSave({
+      id: item?.id || genId(),
+      name: form.name!,
+      status: form.status as RecordStatus || 'Active',
+      createdAt: item?.createdAt || now(),
+      updatedAt: now(),
+    });
+  };
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-3">
+        <Field label={`${label} Name`} required error={err.name}>
+          <Input value={form.name || ''} onChange={e => setForm({ ...form, name: e.target.value })} error={!!err.name} placeholder={`e.g. ${label}...`} />
+        </Field>
+        <Field label="Status">
+          <Select value={form.status || 'Active'} onChange={e => setForm({ ...form, status: e.target.value as RecordStatus })} options={STATUSES} />
+        </Field>
+      </div>
+      <div className="flex justify-end gap-2 mt-5">
+        <Btn onClick={onClose}>Cancel</Btn>
+        <Btn accent onClick={save}>{item ? 'Update' : 'Create'} {label}</Btn>
+      </div>
+    </>
+  );
+};
+
 // ── COMPANY MASTER ────────────────────────────────────────────────────────────
-const CompanyForm: React.FC<{ item?: Company; db: DB; onSave: (c: Company) => void; onClose: () => void }> = ({ item, db, onSave, onClose }) => {
+const CompanyForm: React.FC<{ item?: Company; db: DatabaseState; onSave: (c: Company) => void; onClose: () => void }> = ({ item, db, onSave, onClose }) => {
   const [form, setForm] = useState<Partial<Company>>(item || { status: 'Active' });
   const [err, setErr] = useState<Record<string, string>>({});
   const set = (k: keyof Company, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -58,7 +94,7 @@ const CompanyForm: React.FC<{ item?: Company; db: DB; onSave: (c: Company) => vo
 import { COUNTRIES, STATES, DISTRICTS } from '../data/seed';
 const BRANCH_TYPES = ['Hospital','Clinic','Diagnostic Center','Pharmacy','Laboratory'].map(v => ({ value: v, label: v }));
 
-const FacilityForm: React.FC<{ item?: Facility; db: DB; onSave: (f: Facility) => void; onClose: () => void }> = ({ item, db, onSave, onClose }) => {
+const FacilityForm: React.FC<{ item?: Facility; db: DatabaseState; onSave: (f: Facility) => void; onClose: () => void }> = ({ item, db, onSave, onClose }) => {
   const [form, setForm] = useState<Partial<Facility>>(item || { status: 'Active' });
   const [err, setErr] = useState<Record<string, string>>({});
   const set = (k: keyof Facility, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -129,16 +165,16 @@ const FacilityForm: React.FC<{ item?: Facility; db: DB; onSave: (f: Facility) =>
 };
 
 // ── TREE VIEW ─────────────────────────────────────────────────────────────────
-const TreeNode: React.FC<{ company: Company; db: DB; onEditFacility: (f: Facility) => void }> = ({ company, db, onEditFacility }) => {
+const TreeNode: React.FC<{ company: Company; db: DatabaseState; onEditFacility: (f: Facility) => void }> = ({ company, db, onEditFacility }) => {
   const [open, setOpen] = useState(true);
   const facilities = db.facilities.filter(f => f.companyId === company.id);
   return (
     <div className="mb-2">
       <button onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-2 w-full p-2.5 rounded-xl hover:bg-[#4361ee]/5 transition-colors text-left">
+        className="flex items-center gap-2 w-full p-2.5 rounded-xl hover:bg-[#4361ee]/5 transition-colors text-left font-normal">
         {open ? <ChevronDown size={14} className="text-[#4361ee] shrink-0" /> : <ChevronRight size={14} className="opacity-40 shrink-0" />}
         <Building2 size={14} className="text-[#4361ee] shrink-0" />
-        <span className="text-xs font-normal">{company.companyCode} — {company.companyName}</span>
+        <span className="text-xs">{company.companyCode} — {company.companyName}</span>
         <StatusBadge status={company.status} />
         <span className="ml-auto text-[10px] opacity-40">{facilities.length} facilities</span>
       </button>
@@ -170,10 +206,15 @@ const TreeNode: React.FC<{ company: Company; db: DB; onEditFacility: (f: Facilit
 };
 
 // ── MASTER MODULE ─────────────────────────────────────────────────────────────
-export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
-  const [tab, setTab] = useState<'company' | 'facility' | 'branch'>('company');
+type Tab = 'company' | 'facility' | 'branch' | 'religions' | 'nationalities' | 'idTypes';
+
+export const MasterModule: React.FC<Props> = ({ db, setDb, user, showToast }) => {
+  const [tab, setTab] = useState<Tab>('company');
   const [companyModal, setCompanyModal] = useState<Company | null | true>(null);
   const [facilityModal, setFacilityModal] = useState<Facility | null | true>(null);
+  const [masterModal, setMasterModal] = useState<{ item?: MasterRecord; label: string; key: 'religions' | 'nationalities' | 'idTypes' } | null>(null);
+
+  const isSuperAdmin = user.roleType === 'SUPER_ADMIN';
 
   const saveCompany = (c: Company) => {
     const exists = db.companies.find(x => x.id === c.id);
@@ -191,27 +232,64 @@ export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
     setFacilityModal(null);
   };
 
-  const TABS = [{ id: 'company', label: 'Companies' }, { id: 'facility', label: 'Facilities (Tree)' }, { id: 'branch', label: 'Branches' }] as const;
+  const saveMaster = (r: MasterRecord, key: 'religions' | 'nationalities' | 'idTypes') => {
+    const list = db[key] || [];
+    const exists = list.find(x => x.id === r.id);
+    const updated = exists ? list.map(x => x.id === r.id ? r : x) : [...list, r];
+    setDb({ ...db, [key]: updated });
+    showToast(`${masterModal?.label} saved`, 'success');
+    setMasterModal(null);
+  };
+
+  const TABS = [
+    { id: 'company', label: 'Companies', icon: Building2 },
+    { id: 'facility', label: 'Facilities', icon: ChevronRight },
+    { id: 'branch', label: 'Branches', icon: List },
+    ...(isSuperAdmin ? [
+      { id: 'religions', label: 'Religions', icon: Globe },
+      { id: 'nationalities', label: 'Nationalities', icon: Globe },
+      { id: 'idTypes', label: 'ID Types', icon: Hash },
+    ] as const : []),
+  ];
+
+  const renderMasterTable = (key: 'religions' | 'nationalities' | 'idTypes', label: string) => {
+    const list = db[key] || [];
+    return list.length === 0 ? <Empty /> : (
+      <Table headers={['Name', 'Status', 'Created', 'Actions']}>
+        {list.map(r => (
+          <TR key={r.id}>
+            <TD>{r.name}</TD>
+            <TD><StatusBadge status={r.status} /></TD>
+            <TD>{r.createdAt.slice(0, 10)}</TD>
+            <TD><Btn sm onClick={() => setMasterModal({ item: r, label, key })}><Pencil size={11} /> Edit</Btn></TD>
+          </TR>
+        ))}
+      </Table>
+    );
+  };
 
   return (
     <div className="nm-flat p-4 rounded-2xl h-full flex flex-col gap-3 animate-fade-in">
-      <PageHeader title="Organisation Master" subtitle="Company → Facility → Branch hierarchy">
+      <PageHeader title="Organisation Master" subtitle="Manage hierarchy and system metadata">
         {tab === 'company'  && <Btn accent sm onClick={() => setCompanyModal(true)}><Plus size={13} /> Add Company</Btn>}
         {tab === 'facility' && <Btn accent sm onClick={() => setFacilityModal(true)}><Plus size={13} /> Add Facility</Btn>}
+        {tab === 'religions' && <Btn accent sm onClick={() => setMasterModal({ label: 'Religion', key: 'religions' })}><Plus size={13} /> Add Religion</Btn>}
+        {tab === 'nationalities' && <Btn accent sm onClick={() => setMasterModal({ label: 'Nationality', key: 'nationalities' })}><Plus size={13} /> Add Nationality</Btn>}
+        {tab === 'idTypes' && <Btn accent sm onClick={() => setMasterModal({ label: 'ID Type', key: 'idTypes' })}><Plus size={13} /> Add ID Type</Btn>}
       </PageHeader>
 
       {/* Tabs */}
-      <div className="flex gap-1 nm-inset p-1 rounded-xl w-fit">
+      <div className="flex gap-1 nm-inset p-1 rounded-xl w-fit overflow-x-auto max-w-full">
         {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-normal transition-all ${tab === t.id ? 'nm-flat text-[#4361ee]' : 'opacity-50 hover:opacity-80'}`}>
+          <button key={t.id} onClick={() => setTab(t.id as Tab)}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-normal transition-all whitespace-nowrap ${tab === t.id ? 'nm-flat text-[#4361ee]' : 'opacity-50 hover:opacity-80'}`}>
+            <t.icon size={12} />
             {t.label}
           </button>
         ))}
       </div>
 
       <div className="flex-1 overflow-auto">
-        {/* Companies */}
         {tab === 'company' && (
           db.companies.length === 0 ? <Empty /> :
           <Table headers={['Code', 'Name', 'Status', 'Created', 'Actions']}>
@@ -227,7 +305,6 @@ export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
           </Table>
         )}
 
-        {/* Facility Tree */}
         {tab === 'facility' && (
           <div className="nm-inset p-3 rounded-xl">
             {db.companies.length === 0
@@ -239,7 +316,6 @@ export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
           </div>
         )}
 
-        {/* Branches */}
         {tab === 'branch' && (
           db.branches.length === 0 ? <Empty /> :
           <Table headers={['Code', 'Facility', 'Branch Name', 'Status', 'Created']}>
@@ -257,6 +333,10 @@ export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
             })}
           </Table>
         )}
+
+        {tab === 'religions' && renderMasterTable('religions', 'Religion')}
+        {tab === 'nationalities' && renderMasterTable('nationalities', 'Nationality')}
+        {tab === 'idTypes' && renderMasterTable('idTypes', 'ID Type')}
       </div>
 
       {/* Modals */}
@@ -269,6 +349,11 @@ export const MasterModule: React.FC<Props> = ({ db, setDb, showToast }) => {
         {facilityModal && (
           <Modal title={facilityModal === true ? 'Add Facility' : 'Edit Facility'} onClose={() => setFacilityModal(null)} wide>
             <FacilityForm item={facilityModal === true ? undefined : facilityModal as Facility} db={db} onSave={saveFacility} onClose={() => setFacilityModal(null)} />
+          </Modal>
+        )}
+        {masterModal && (
+          <Modal title={`${masterModal.item ? 'Edit' : 'Add'} ${masterModal.label}`} onClose={() => setMasterModal(null)}>
+            <MasterRecordForm item={masterModal.item} label={masterModal.label} onSave={(r) => saveMaster(r, masterModal.key)} onClose={() => setMasterModal(null)} />
           </Modal>
         )}
       </AnimatePresence>

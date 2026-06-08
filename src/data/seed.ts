@@ -1,7 +1,9 @@
 import type {
   Company, Facility, Branch, AppUser, Patient,
-  Country, State, District, Religion, Nationality, IdType, FiscalYear
+  Country, State, District, Religion, Nationality, IdType, FiscalYear,
+  DatabaseState
 } from '../types';
+export const now = () => new Date().toISOString();
 
 // ── Fiscal Year ──────────────────────────────────────────────────────────────
 export const FISCAL_YEARS: FiscalYear[] = [
@@ -52,38 +54,38 @@ export const DISTRICTS: District[] = [
 
 // ── Religions ────────────────────────────────────────────────────────────────
 export const RELIGIONS: Religion[] = [
-  { id: 'rl-1', name: 'Islam',        status: 'Active' },
-  { id: 'rl-2', name: 'Hinduism',     status: 'Active' },
-  { id: 'rl-3', name: 'Christianity', status: 'Active' },
-  { id: 'rl-4', name: 'Sikhism',      status: 'Active' },
-  { id: 'rl-5', name: 'Buddhism',     status: 'Active' },
-  { id: 'rl-6', name: 'Jainism',      status: 'Active' },
-  { id: 'rl-7', name: 'Judaism',      status: 'Active' },
-  { id: 'rl-8', name: 'Other',        status: 'Active' },
+  { id: 'rl-1', name: 'Islam',        status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-2', name: 'Hinduism',     status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-3', name: 'Christianity', status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-4', name: 'Sikhism',      status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-5', name: 'Buddhism',     status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-6', name: 'Jainism',      status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-7', name: 'Judaism',      status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'rl-8', name: 'Other',        status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
 ];
 
 // ── Nationalities ────────────────────────────────────────────────────────────
 export const NATIONALITIES: Nationality[] = [
-  { id: 'nt-1', name: 'Indian',     status: 'Active' },
-  { id: 'nt-2', name: 'Emirati',    status: 'Active' },
-  { id: 'nt-3', name: 'British',    status: 'Active' },
-  { id: 'nt-4', name: 'American',   status: 'Active' },
-  { id: 'nt-5', name: 'Saudi',      status: 'Active' },
-  { id: 'nt-6', name: 'Qatari',     status: 'Active' },
-  { id: 'nt-7', name: 'Pakistani',  status: 'Active' },
-  { id: 'nt-8', name: 'Bangladeshi',status: 'Active' },
-  { id: 'nt-9', name: 'Other',      status: 'Active' },
+  { id: 'nt-1', name: 'Indian',      status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-2', name: 'Emirati',     status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-3', name: 'British',     status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-4', name: 'American',    status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-5', name: 'Saudi',       status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-6', name: 'Qatari',      status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-7', name: 'Pakistani',   status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-8', name: 'Bangladeshi', status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'nt-9', name: 'Other',       status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
 ];
 
 // ── ID Types ─────────────────────────────────────────────────────────────────
 export const ID_TYPES: IdType[] = [
-  { id: 'it-1', name: 'Aadhar Card',       status: 'Active' },
-  { id: 'it-2', name: 'Passport',          status: 'Active' },
-  { id: 'it-3', name: 'PAN Card',          status: 'Active' },
-  { id: 'it-4', name: 'Driving License',   status: 'Active' },
-  { id: 'it-5', name: 'Voter ID',          status: 'Active' },
-  { id: 'it-6', name: 'National ID',       status: 'Active' },
-  { id: 'it-7', name: 'Residence Permit',  status: 'Active' },
+  { id: 'it-1', name: 'Aadhar Card',       status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-2', name: 'Passport',          status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-3', name: 'PAN Card',          status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-4', name: 'Driving License',   status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-5', name: 'Voter ID',          status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-6', name: 'National ID',       status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
+  { id: 'it-7', name: 'Residence Permit',  status: 'Active', createdAt: '2026-05-21T11:00:00Z', updatedAt: '2026-05-21T11:00:00Z' },
 ];
 
 // ── Companies ─────────────────────────────────────────────────────────────────
@@ -186,6 +188,14 @@ export function nextPatientCode(patients: Patient[], year = CURRENT_YEAR): strin
 export function genId(): string {
   return Math.random().toString(36).slice(2, 11);
 }
-export function now(): string {
-  return new Date().toISOString();
-}
+export const INITIAL_DB: DatabaseState = {
+  companies: COMPANIES,
+  facilities: FACILITIES,
+  branches: BRANCHES,
+  users: USERS,
+  patients: INITIAL_PATIENTS,
+  religions: RELIGIONS,
+  nationalities: NATIONALITIES,
+  idTypes: ID_TYPES,
+  audit_logs: [],
+};

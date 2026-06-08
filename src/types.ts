@@ -68,9 +68,9 @@ export interface Branch {
 export interface Country    { id: string; name: string; code: string; }
 export interface State      { id: string; countryId: string; name: string; }
 export interface District   { id: string; stateId: string; name: string; }
-export interface Religion   { id: string; name: string; status: RecordStatus; }
-export interface Nationality { id: string; name: string; status: RecordStatus; }
-export interface IdType     { id: string; name: string; status: RecordStatus; }
+export interface Religion    extends MasterRecord {}
+export interface Nationality extends MasterRecord {}
+export interface IdType      extends MasterRecord {}
 
 // ── User / Staff ─────────────────────────────────────────────────────────────
 export interface AppUser {
@@ -153,4 +153,23 @@ export interface AuditLog {
 
 // ── UI Helpers ────────────────────────────────────────────────────────────────
 export interface SelectOption { value: string; label: string; }
-export interface TreeNode<T> { data: T; children?: TreeNode<any>[]; }
+export interface MasterRecord {
+  id: string;
+  name: string;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ── System State ─────────────────────────────────────────────────────────────
+export interface DatabaseState {
+  companies: Company[];
+  facilities: Facility[];
+  branches: Branch[];
+  users: AppUser[];
+  patients: Patient[];
+  religions: MasterRecord[];
+  nationalities: MasterRecord[];
+  idTypes: MasterRecord[];
+  audit_logs: AuditLog[];
+}
