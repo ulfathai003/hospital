@@ -171,11 +171,11 @@ export default function App() {
   const [session, setSession] = useState<UserSession | null>(null);
   const [db, setDb] = useState<DatabaseState>(INITIAL_DB);
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
-  const [toasts, setToasts] = useState<{ id: string; msg: string; type: 'success' | 'error' }[]>([]);
+  const [toasts, setToasts] = useState<{ id: string; message: string; type: 'success' | 'error' }[]>([]);
 
-  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     const id = Math.random().toString(36).slice(2, 9);
-    setToasts(prev => [...prev, { id, msg, type }]);
+    setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
   };
 
@@ -189,7 +189,7 @@ export default function App() {
     <>
       <LoginScreen onLogin={handleLogin} />
       <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3">
-        {toasts.map(t => <Toast key={t.id} message={t.msg} type={t.type} />)}
+        {toasts.map(t => <Toast key={t.id} message={t.message} type={t.type} onClose={() => setToasts(prev => prev.filter(x => x.id !== t.id))} />)}
       </div>
     </>
   );
@@ -295,7 +295,7 @@ export default function App() {
       </main>
 
       <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3">
-        {toasts.map(t => <Toast key={t.id} message={t.msg} type={t.type} />)}
+        {toasts.map(t => <Toast key={t.id} message={t.message} type={t.type} onClose={() => setToasts(prev => prev.filter(x => x.id !== t.id))} />)}
       </div>
     </div>
   );
