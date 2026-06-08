@@ -10,7 +10,7 @@ import { LoginScreen }    from './components/LoginScreen';
 import { MasterModule }   from './components/MasterModule';
 import { PatientsModule } from './components/PatientsModule';
 import { ClinicalModule } from './components/ClinicalModule';
-import { Toast }          from './components/ui';
+import { Toast, StatusBadge } from './components/ui';
 
 import {
   INITIAL_DB
@@ -18,7 +18,7 @@ import {
 import type { UserSession, Patient, Company, Facility, Branch, DatabaseState } from './types';
 
 // ── Types ────────────────────────────────────────────────────────────────────
-type Tab = 'dashboard' | 'patients' | 'master' | 'appointments' | 'emr' | 'lab' | 'pharmacy' | 'billing' | 'crm' | 'admin';
+type Tab = 'dashboard' | 'patients' | 'master' | 'appointments' | 'emr' | 'lab' | 'pharmacy' | 'billing' | 'crm' | 'admin' | 'companies';
 
 // ── Nav config by role ────────────────────────────────────────────────────────
 const NAV: Record<string, { id: Tab; icon: any; label: string }[]> = {
@@ -27,6 +27,7 @@ const NAV: Record<string, { id: Tab; icon: any; label: string }[]> = {
     { id:'patients',     icon:Users,           label:'Patients'     },
     { id:'master',       icon:Building2,       label:'Organisation' },
     { id:'appointments', icon:Calendar,        label:'Appointments' },
+    { id:'companies',    icon:Building2,       label:'Company Mgt'  },
     { id:'emr',          icon:Stethoscope,     label:'Clinical EMR' },
     { id:'lab',          icon:FlaskConical,    label:'Laboratory'   },
     { id:'pharmacy',     icon:Package,         label:'Pharmacy'     },
@@ -198,11 +199,14 @@ export default function App() {
 
   const navItems = NAV[session.roleType] || NAV.STAFF;
 
+  const [hoverId, setHoverId] = useState<string | null>(null);
+
   const renderModule = () => {
     switch (activeTab) {
       case 'dashboard':    return <DashboardModule user={session} patients={db.patients} setTab={setActiveTab} />;
       case 'patients':     return <PatientsModule db={db} setDb={setDb} user={session} showToast={showToast} />;
       case 'master':       return <MasterModule db={db} setDb={setDb} user={session} showToast={showToast} />;
+      case 'companies':    return <Placeholder label="Company Management" icon={Building2} />;
       case 'emr':          return <ClinicalModule user={session} showToast={showToast} />;
       case 'appointments': return <Placeholder label="Appointments" icon={Calendar} />;
       case 'lab':          return <Placeholder label="Laboratory" icon={FlaskConical} />;
@@ -228,15 +232,40 @@ export default function App() {
 
         <div className="flex-1 space-y-0.5 overflow-y-auto">
           {navItems.map(item => (
-            <button key={item.id} onClick={() => setActiveTab(item.id)}
-              className={`w-full p-2.5 rounded-xl flex items-center gap-2.5 transition-all text-left font-normal text-xs ${
-                activeTab === item.id
-                  ? 'nm-inset text-[#4361ee]'
-                  : 'opacity-50 hover:opacity-90 hover:text-[#8338ec]'
-              }`}>
-              <item.icon size={16} className="shrink-0" />
-              <span className="hidden lg:block truncate">{item.label}</span>
-            </button>
+            <div key={item.id} className="relative group" 
+              onMouseEnter={() => setHoverId(item.id)} 
+              onMouseLeave={() => setHoverId(null)}>
+              <button onClick={() => setActiveTab(item.id)}
+                className={`w-full p-2.5 rounded-xl flex items-center gap-2.5 transition-all text-left font-normal text-xs ${
+                  activeTab === item.id
+                    ? 'nm-inset text-[#4361ee]'
+                    : 'opacity-50 hover:opacity-90 hover:text-[#8338ec]'
+                }`}>
+                <item.icon size={16} className="shrink-0" />
+                <span className="hidden lg:block truncate">{item.label}</span>
+              </button>
+
+              <AnimatePresence>
+                {hoverId === 'companies' && item.id === 'companies' && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
+                    className="absolute left-[calc(100%+8px)] top-0 z-50 nm-card p-3 rounded-2xl min-w-[200px] shadow-2xl border border-black/5">
+                    <p className="text-[10px] uppercase tracking-widest opacity-40 mb-2 px-1">Registered Companies</p>
+                    <div className="space-y-1">
+                      {db.companies.map(c => (
+                        <div key={c.id} className="nm-inset px-3 py-2 rounded-xl flex items-center justify-between group/item hover:bg-[#4361ee]/5 transition-colors cursor-pointer">
+                          <div>
+                            <p className="text-xs font-normal text-black">{c.companyName}</p>
+                            <p className="text-[9px] opacity-40">{c.companyCode}</p>
+                          </div>
+                          <StatusBadge status={c.status} />
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))}
         </div>
 
