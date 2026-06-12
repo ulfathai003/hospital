@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stethoscope, Plus, Pencil, Bed, Home, ClipboardList } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Btn, Modal, Field, Input, Select, StatusBadge, PageHeader, Table, TR, TD, Empty } from './ui';
 import { genId, now } from '../data/seed';
 import type { RecordStatus } from '../types';

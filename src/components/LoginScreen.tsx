@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Hospital, Eye, EyeOff, AlertCircle, ChevronDown, UserCheck } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { USERS, COMPANIES, FACILITIES, BRANCHES } from '../data/seed';
 import type { UserSession } from '../types';
 import { Btn, SearchableSelect } from './ui';
@@ -63,7 +63,7 @@ export const LoginScreen: React.FC<Props> = ({ onLogin }) => {
       setFacilityId('');
       setBranchId('');
       // We trigger the actual login from here
-      onLogin({ id: admin.id, email: admin.email, fullName: admin.fullName, roleType: admin.roleType });
+      onLogin({ id: admin.id, email: admin.email, fullName: admin.fullName, roleType: admin.roleType, companyId: '', facilityId: '', branchId: '' });
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Eye, Pencil, Search, X } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   COUNTRIES, STATES, DISTRICTS, RELIGIONS, NATIONALITIES, ID_TYPES,
   nextPatientCode, genId, now

@@ -1,0 +1,234 @@
+{
+  "users": [
+    {
+      "id": "usr-1",
+      "email": "admin@hospital.com",
+      "fullName": "Dr. Amitabh Verma",
+      "role": "SUPER_ADMIN"
+    },
+    {
+      "id": "usr-2",
+      "email": "doctor@hospital.com",
+      "fullName": "Dr. Sarah Wilson",
+      "role": "DOCTOR",
+      "specialization": "Cardiology"
+    },
+    {
+      "id": "usr-3",
+      "email": "reception@hospital.com",
+      "fullName": "John Doe",
+      "role": "RECEPTIONIST"
+    },
+    {
+      "id": "usr-4",
+      "email": "nurse@hospital.com",
+      "fullName": "Jane Smith",
+      "role": "NURSE"
+    },
+    {
+      "id": "usr-5",
+      "email": "lab@hospital.com",
+      "fullName": "Anil Kapur",
+      "role": "LAB_TECHNICIAN"
+    },
+    {
+      "id": "usr-6",
+      "email": "pharmacy@hospital.com",
+      "fullName": "Raj Kumar",
+      "role": "PHARMACIST"
+    },
+    {
+      "id": "usr-7",
+      "email": "crm@hospital.com",
+      "fullName": "Vikram Bose",
+      "role": "CRM_EXECUTIVE"
+    },
+    {
+      "id": "usr-8",
+      "email": "billing@hospital.com",
+      "fullName": "Meera Iyer",
+      "role": "BILLING_EXECUTIVE"
+    }
+  ],
+  "patients": [
+    {
+      "id": "pat-1",
+      "uhid": "UHID-20260520-0012",
+      "status": "ACTIVE",
+      "registrationType": "WALK_IN",
+      "fullName": "Rahul Sen",
+      "gender": "Male",
+      "dob": "1990-05-15",
+      "nationality": "Indian",
+      "mobile": "9876543210",
+      "email": "rahul.sen@example.com",
+      "state": "Maharashtra",
+      "country": "India",
+      "address": "123 Park Street, Mumbai",
+      "createdAt": "2026-05-20T10:00:00Z",
+      "updatedAt": "2026-05-20T10:00:00Z"
+    }
+  ],
+  "wards": [
+    {
+      "id": "ward-1",
+      "name": "General Ward A",
+      "totalBeds": 20,
+      "availableBedsCount": 15
+    },
+    {
+      "id": "ward-2",
+      "name": "ICU",
+      "totalBeds": 5,
+      "availableBedsCount": 2
+    },
+    {
+      "id": "ward-3",
+      "name": "Maternity Ward",
+      "totalBeds": 10,
+      "availableBedsCount": 8
+    }
+  ],
+  "beds": [
+    {
+      "id": "bed-1",
+      "wardId": "ward-1",
+      "bedNumber": "A-101",
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "bed-2",
+      "wardId": "ward-1",
+      "bedNumber": "A-102",
+      "status": "OCCUPIED"
+    },
+    {
+      "id": "bed-3",
+      "wardId": "ward-2",
+      "bedNumber": "ICU-01",
+      "status": "AVAILABLE"
+    }
+  ],
+  "appointments": [],
+  "clinicalRecords": [],
+  "admissions": [],
+  "invoices": [],
+  "payments": [],
+  "medicines": [
+    {
+      "id": "m-1",
+      "name": "Paracetamol 500mg",
+      "type": "Tablet"
+    },
+    {
+      "id": "m-2",
+      "name": "Amoxicillin 250mg",
+      "type": "Capsule"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv-1",
+      "medicineName": "Paracetamol 500mg",
+      "batchNumber": "PM-109",
+      "expiryDate": "2027-12-31",
+      "quantityInStock": 8,
+      "reorderLevel": 20,
+      "unitPrice": 18.5
+    }
+  ],
+  "vendors": [
+    {
+      "id": "v-1",
+      "name": "Alkem Laboratories",
+      "contact": "Sales Div"
+    },
+    {
+      "id": "v-2",
+      "name": "Sun Pharma",
+      "contact": "Medical Supplies"
+    }
+  ],
+  "labTests": [
+    {
+      "id": "test-1",
+      "testCode": "CBC",
+      "testName": "Complete Blood Count",
+      "standardCost": 500
+    },
+    {
+      "id": "test-2",
+      "testCode": "LFT",
+      "testName": "Liver Function Test",
+      "standardCost": 800
+    },
+    {
+      "id": "test-3",
+      "testCode": "KFT",
+      "testName": "Kidney Function Test",
+      "standardCost": 750
+    }
+  ],
+  "labOrders": [],
+  "crmLeads": [
+    {
+      "id": "ld-1",
+      "source": "Website",
+      "fullName": "Harpreet Singh",
+      "email": "harpreet@example.com",
+      "mobile": "9988776655",
+      "stage": "NEW",
+      "createdAt": "2026-05-31T09:00:00Z",
+      "updatedAt": "2026-05-31T09:00:00Z"
+    }
+  ],
+  "crmActivities": [
+    {
+      "id": "act-1",
+      "leadId": "ld-4",
+      "activityType": "CALL",
+      "summary": "Follow-up on Maternity tour",
+      "notes": "Harpreet confirmed appointment scheduled.",
+      "followupNeeded": false,
+      "loggedBy": "usr-9",
+      "loggedByName": "Vikram Bose",
+      "createdAt": "2026-05-31T11:00:00Z"
+    }
+  ],
+  "auditLogs": [],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "type": "LOW_PHARMACY_STOCK",
+      "title": "Critical Low Stock Alert",
+      "message": "Paracetamol 500mg (Batch PM-109) has fallen below minimum reorder levels (8 units remaining).",
+      "roleRecipient": "PHARMACIST",
+      "isRead": false,
+      "smsSent": true,
+      "emailSent": true,
+      "createdAt": "2026-06-12T11:25:21.039Z"
+    },
+    {
+      "id": "notif-2",
+      "type": "APPOINTMENT_BOOKED",
+      "title": "New OPD Booking",
+      "message": "Patient Rahul Sen has booked an appointment with Dr. Amitabh Verma for today at 10:00 AM.",
+      "roleRecipient": "RECEPTIONIST",
+      "isRead": false,
+      "smsSent": false,
+      "emailSent": false,
+      "createdAt": "2026-06-12T11:25:21.040Z"
+    },
+    {
+      "id": "notif-3",
+      "type": "CRITICAL_LAB_RESULT",
+      "title": "Critical Lab Value Reported",
+      "message": "Patient Hemoglobin count is extremely low (5.2 g/dL) for UHID-2026-05-20-0012.",
+      "roleRecipient": "DOCTOR",
+      "isRead": false,
+      "smsSent": true,
+      "emailSent": true,
+      "createdAt": "2026-06-12T11:25:21.040Z"
+    }
+  ]
+}

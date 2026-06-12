@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Search, CheckCircle, AlertCircle, ChevronDown, Calendar } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { RecordStatus } from '../types';
 
 // ── Btn ──────────────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ export const StatusBadge: React.FC<{ status: RecordStatus | string }> = ({ statu
 // ── Toast ─────────────────────────────────────────────────────────────────────
 export const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose?: () => void }> = ({ message, type, onClose }) => (
   <motion.div initial={{ opacity: 0, y: -40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }}
-    className={`fixed top-4 right-4 z-[100] flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-normal shadow-xl border ${type === 'success' ? 'border-green-200 text-green-800' : 'border-red-200 text-red-800'}`}>
+    className={`fixed top-4 right-4 z-100 flex items-center gap-3 px-5 py-3 rounded-2xl nm-card text-sm font-normal shadow-xl border ${type === 'success' ? 'border-green-200 text-green-800' : 'border-red-200 text-red-800'}`}>
     {type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
     <span>{message}</span>
     {onClose && <button onClick={onClose} className="ml-2 opacity-50 hover:opacity-100"><X size={14} /></button>}

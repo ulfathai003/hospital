@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Building2, Plus, Pencil, ChevronRight, ChevronDown, List, Globe, Hash } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { COMPANIES, FACILITIES, BRANCHES, nextCompanyCode, nextFacilityCode, genId, now } from '../data/seed';
 import type { Company, Facility, Branch, RecordStatus, DatabaseState, UserSession, MasterRecord } from '../types';
 import { Btn, Modal, Field, Input, Select, SearchableSelect, StatusBadge, PageHeader, Table, TR, TD, Empty } from './ui';

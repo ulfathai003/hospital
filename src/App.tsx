@@ -4,7 +4,7 @@ import {
   Bell, LogOut, Calendar, Stethoscope, FlaskConical,
   CreditCard, Package, TrendingUp, Activity, BarChart3, UserCheck
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { LoginScreen }    from './components/LoginScreen';
 import { MasterModule }   from './components/MasterModule';
@@ -117,7 +117,7 @@ const DashboardModule: React.FC<{ user: UserSession; patients: Patient[]; setTab
               </button>
             </div>
             <div className="space-y-1 flex-1 overflow-auto">
-              {patients.slice(0,5).map(p => (
+              {(patients || []).slice(0,5).map(p => (
                 <div key={p.id} className="nm-flat p-2 rounded-xl text-xs flex justify-between items-center">
                   <div>
                     <p className="font-normal">{p.fullName}</p>
@@ -252,7 +252,7 @@ export default function App() {
                     className="absolute left-[calc(100%+8px)] top-0 z-50 nm-card p-3 rounded-2xl min-w-[200px] shadow-2xl border border-black/5">
                     <p className="text-[10px] uppercase tracking-widest opacity-40 mb-2 px-1">Registered Companies</p>
                     <div className="space-y-1">
-                      {db.companies.map(c => (
+                      {(db.companies || []).map(c => (
                         <div key={c.id} className="nm-inset px-3 py-2 rounded-xl flex items-center justify-between group/item hover:bg-[#4361ee]/5 transition-colors cursor-pointer">
                           <div>
                             <p className="text-xs font-normal text-black">{c.companyName}</p>
